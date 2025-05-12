@@ -4,7 +4,8 @@ import org.example.domain.repository.domain.repository.MealsRepository
 
 class GetGuessGameUseCase(private val repo: MealsRepository) {
     fun getRandomMeal(): Meal {
-        return repo.getAllMeals().filter(::getNotNullMeals).random()
+        return repo.getAllMeals().filter(::getNotNullMeals).randomOrNull()
+            ?:throw Exception("Meal Not Found")
     }
 
     fun checkMinutesOfMealForGuessGame(meal: Meal, minutes: Int): Boolean {

@@ -3,6 +3,7 @@ package org.example
 import org.example.data.repository.data.repository.MockDataMealRepository
 import org.example.domain.usecase.GetEasyPreparedMealsUseCase
 import org.example.domain.usecase.GetGuessGameUseCase
+import org.example.domain.usecase.GetSweetsWithNoEggsUseCase
 
 fun main() {
     val mealsUseCase = GetEasyPreparedMealsUseCase(MockDataMealRepository())
@@ -14,4 +15,9 @@ fun main() {
     println("name:${randomMealUseCase.getRandomMeal().name}\n" +
             "correct minutes:${randomMealUseCase.getRandomMeal().minutes} \n" +
             "guessed minutes ${randomMealUseCase.checkMinutesOfMealForGuessGame(meal,50)}")
+
+    val mealHasNoEggs= GetSweetsWithNoEggsUseCase(MockDataMealRepository()).getMealHasNoEggs()
+    println(mealHasNoEggs.name)
+    val mealHasNoEggs2= GetSweetsWithNoEggsUseCase(MockDataMealRepository()).getMealHasNoEggs()
+    println(mealHasNoEggs2.name)
 }
