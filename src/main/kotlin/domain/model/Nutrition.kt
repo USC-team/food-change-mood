@@ -1,4 +1,4 @@
-package org.example.model
+package domain.model
 
 data class Nutrition(
     val calories: Double?,

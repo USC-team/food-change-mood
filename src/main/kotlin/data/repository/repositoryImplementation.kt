@@ -1,2 +1,2 @@
-package data.repository
+package org.example.data.repository
 
