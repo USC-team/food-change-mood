@@ -4,7 +4,7 @@ import domain.model.Meal
 import domain.model.Nutrition
 import org.example.domain.repository.domain.repository.MealsRepository
 
-class MealsRepositoryImplementation : MealsRepository {
+class MockDataMealRepository : MealsRepository {
     override fun getAllMeals(): List<Meal> {
         return listOf(
             Meal(
