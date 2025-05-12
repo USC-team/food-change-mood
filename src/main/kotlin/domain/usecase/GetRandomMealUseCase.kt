@@ -1,0 +1,28 @@
+package org.example.domain.usecase
+import domain.model.Meal
+import org.example.domain.repository.domain.repository.MealsRepository
+
+class GetRandomMealUseCase(private val repo: MealsRepository) {
+    fun GetRandomMeal(): Meal {
+        return GetNotNullMeals().random()
+    }
+    fun CheckMinutesOfMeal(meal :Meal, minutes:Int):Boolean{
+        return meal.minutes==minutes
+    }
+    private fun GetNotNullMeals() : List<Meal> {
+        return repo.getAllMeals().filter { meal->
+                    meal.name!=null&&
+                    meal.id!=null&&
+                    meal.minutes!=null&&
+                    meal.contributorId!=null&&
+                    meal.submitted!=null&&
+                    meal.tags!=null&&
+                    meal.nutrition!=null&&
+                    meal.nSteps!=null&&
+                    meal.steps!=null&&
+                    meal.description!=null&&
+                    meal.ingredients!=null&&
+                    meal.nIngredients!=null
+        }
+    }
+}
