@@ -10,5 +10,8 @@ fun main() {
         println(it.name)
     }
     val randomMealUseCase= GetGuessGameUseCase(MockDataMealRepository())
-    println("${randomMealUseCase.GetRandomMeal().name}  ${randomMealUseCase.GetRandomMeal().minutes}")
+    val meal = randomMealUseCase.getRandomMeal()
+    println("name:${randomMealUseCase.getRandomMeal().name}\n" +
+            "correct minutes:${randomMealUseCase.getRandomMeal().minutes} \n" +
+            "guessed minutes ${randomMealUseCase.checkMinutesOfMealForGuessGame(meal,50)}")
 }
