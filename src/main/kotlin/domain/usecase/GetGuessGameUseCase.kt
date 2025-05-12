@@ -2,7 +2,7 @@ package org.example.domain.usecase
 import domain.model.Meal
 import org.example.domain.repository.domain.repository.MealsRepository
 
-class GetRandomMealUseCase(private val repo: MealsRepository) {
+class GetGuessGameUseCase(private val repo: MealsRepository) {
     fun getRandomMeal(): Meal {
         return repo.getAllMeals().filter(::getNotNullMeals).random()
     }
