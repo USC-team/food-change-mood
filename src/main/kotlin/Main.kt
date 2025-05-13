@@ -14,7 +14,7 @@ fun main() {
     val meal = randomMealUseCase.getRandomMeal()
     println("name:${randomMealUseCase.getRandomMeal().name}\n" +
             "correct minutes:${randomMealUseCase.getRandomMeal().minutes} \n" +
-            "guessed minutes ${randomMealUseCase.checkMinutesOfMealForGuessGame(meal,50)}")
+            "guessed minutes ${randomMealUseCase.isGuessCorrectHighOrLow(meal,50)}")
 
     val mealHasNoEggs= GetSweetsWithNoEggsUseCase(MockDataMealRepository()).getMealHasNoEggs()
     println(mealHasNoEggs.name)
