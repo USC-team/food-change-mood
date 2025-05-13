@@ -8,7 +8,7 @@ class GetGuessGameUseCase(private val repo: MealsRepository) {
             ?:throw Exception("Meal Not Found")
     }
 
-    fun checkMinutesOfMealForGuessGame(meal: Meal, minutes: Int): Boolean {
+    fun isGuessCorrectHighOrLow(meal: Meal, minutes: Int): Boolean {
         return meal.minutes == minutes
     }
 
