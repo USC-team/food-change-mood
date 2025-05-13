@@ -1,4 +1,4 @@
-package org.example.domain.repository.domain.repository
+package org.example.domain.repository
 
 import domain.model.Meal
 
