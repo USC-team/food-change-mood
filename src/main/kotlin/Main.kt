@@ -1,6 +1,6 @@
 package org.example
 
-import org.example.data.repository.data.repository.MockDataMealRepository
+import org.example.data.repository.MockDataMealRepository
 import org.example.domain.usecase.GetEasyPreparedMealsUseCase
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
