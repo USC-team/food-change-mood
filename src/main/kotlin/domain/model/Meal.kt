@@ -50,11 +50,3 @@ data class Meal(
         """.trimIndent()
     }
 }
-
-fun Meal.isKetoMeal(ketoMealList: MutableSet<Meal>): Boolean {
-    val carbs = this.nutrition?.carbohydrates ?: return false
-    val protein = this.nutrition.protein ?: return false
-
-    return carbs <= 15.0 && protein >= 10.0 && (this !in ketoMealList)
-}
-

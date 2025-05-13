@@ -1,19 +1,27 @@
 package domain.usecase
 
 import domain.model.Meal
-import domain.model.isKetoMeal
 import org.example.domain.repository.MealsRepository
-import kotlin.collections.filter
-import kotlin.collections.randomOrNull
 
 class GetKetoMealUseCase(private val repo: MealsRepository) {
     val ketoMealList = mutableSetOf<Meal>()
 
     fun getKetoMeal(): Meal {
-        val ketoMeal = repo.getAllMeals().filter { meal ->
-            meal.isKetoMeal(ketoMealList)
-        }.randomOrNull() ?: throw kotlin.Exception("No more keto meals available.")
-        ketoMealList.add(ketoMeal)
-        return ketoMeal
+        return repo.getAllMeals()
+            .filter { meal ->
+            isKetoMeal(meal) && meal !in ketoMealList}
+            .randomOrNull()
+            ?.store()
+            ?: throw kotlin.Exception("No more keto meals available.")
+    }
+    fun isKetoMeal(meal: Meal): Boolean {
+        val carbs = meal.nutrition?.carbohydrates ?: return false
+        val protein = meal.nutrition.protein ?: return false
+        return carbs <= 15.0 && protein >= 10.0
+    }
+
+    fun Meal.store(): Meal {
+        ketoMealList.add(this)
+        return this
     }
 }
