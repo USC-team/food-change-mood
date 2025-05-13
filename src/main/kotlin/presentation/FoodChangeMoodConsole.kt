@@ -1,125 +1,270 @@
 package org.example.presentation
 
+import domain.model.Meal
+import domain.model.Nutrition
+
 class FoodChangeMoodConsole() {
 
-    fun start(){
-        greeet()
+    fun start() {
+        greet()
         chooseOption()
     }
-    fun chooseOption(){
+
+    private fun chooseOption() {
         showOptions()
-        val userChoice= getUserChoice()
+        val userChoice = getUserChoice()
         when (userChoice) {
-            0->{
+            0 -> {
                 sayGoodBye()
                 return
             }
-            1->{
+
+            1 -> {
                 explainFirstChoice()
 
             }
-            else->{
-                println("Invalid Choice!")
+
+            3 -> {
+                explainThirdChoice()
+
+            }
+
+            4 -> {
+                explainFourthChoice()
+
+            }
+
+            5 -> {
+                explainFifthChoice()
+                /*val guessGameUseCase =
+                val meal = guessGameUseCase.getRandomMeal
+                if(!implementGuessGame(3, meal) println("Failed!\n Correct Minutes ${meal.minutes}")
+                */
+            }
+
+            6 -> {
+                explainSixthChoice()
+                //create val from no egg sweets use case and ask the user if they want to show details or show another one
+
+            }
+
+            7 -> {
+                explainSeventhChoice()
+
+            }
+
+            else -> {
+                println(
+                    "${ConsoleColors.RED_COLOR}Invalid Choice!${ConsoleColors.RESETCOLOR}\n" +
+                            "We'll support other features in the future!"
+                )
             }
         }
         chooseOption()
     }
-    fun greeet(){
-        println(ConsoleColors.MAGENTA_COLOR+
-                "***Welcome in USC Personal Finance Tracker***" +
-                ConsoleColors.RESETCOLOR)
+
+    private fun implementGuessGame(tries: Int, meal: Meal): Boolean {
+        if (tries > 0) {
+            /*
+    println(meal.name)
+    askUserToEnter("Guess Minutes")
+
+    val guessResult = guessGameUseCase.isCorrectGuess(meal, getUserChoice())
+    when (guessResult) {
+    Correct -> {println("Excellent!") return true}
+    Too_High -> {
+        println("You are Wrong! It's too high!")
+        implementGuessGame(tries - 1, meal)
     }
-    fun sayGoodBye(){
-        println(ConsoleColors.MAGENTA_COLOR +
-                "Bye Bye! See you again!" +
-                ConsoleColors.RESETCOLOR)
+
+    Too_Low -> {
+        println("You are Wrong! It's too low!")
+        implementGuessGame(tries - 1,meal)
     }
-    fun explainFirstChoice(){
-        println("you'll get a list of healthy fast food meals that can be prepared in 15 minutes" +
-                " or less, with very low total fat, saturated fat, and carbohydrate values" +
-                " compared to other meals in our list")
+    }*/ return true
+        } else return false
     }
-    fun explainSecondChoice(){
-        println("enter a country name, either in capital or small or even a mix. " +
-                "don't worry about spelling mistakes! " +
-                "and we will show all meals in our list related to that country")
+
+    private fun showMealsDetails(meal: Meal) {
+        println(
+                    "Name:               ${meal.name}\n" +
+                    "ID:                 ${meal.id}\n" +
+                    "Minutes:            ${meal.minutes}\n" +
+                    "Contributor ID:     ${meal.contributorId}\n" +
+                    "Submitted:          ${meal.submitted}\n" +
+                    "Tags:               ${meal.tags?.forEach { println("$it  ") }}\n" +
+                    "Nutrition:\n${showNutrientsDetails(meal.nutrition ?: throw Exception("Nutrition is null"))}\n" +
+                    "Number of Steps:    ${meal.nSteps}\n" +
+                    "Steps:              ${meal.steps?.forEach { println("$it  ") }}\n" +
+                    "Description:        ${meal.description}\n" +
+                    "Ingredients:        ${meal.ingredients?.forEach { println("$it  ") }}\n" +
+                    "Ingredients Number: ${meal.nIngredients}\n"
+        )
     }
-    fun explainThirdChoice(){
+
+    private fun showNutrientsDetails(nutrients: Nutrition) {
+        println(
+            "\tCalories:      ${nutrients.calories}\n" +
+                    "\tTotal Fat:     ${nutrients.totalFat}\n" +
+                    "\tSugar:         ${nutrients.sugar}\n" +
+                    "\tSodium:        ${nutrients.sodium}\n" +
+                    "\tProtein:       ${nutrients.protein}\n" +
+                    "\tSaturated Fat: ${nutrients.saturatedFat}\n" +
+                    "\tCarbohydrates: ${nutrients.carbohydrates}\n"
+        )
+    }
+
+    private fun greet() {
+        println(
+            ConsoleColors.MAGENTA_COLOR +
+                    "***Welcome in USC Personal Finance Tracker***" +
+                    ConsoleColors.RESETCOLOR
+        )
+    }
+
+    private fun sayGoodBye() {
+        println(
+            ConsoleColors.MAGENTA_COLOR +
+                    "Bye Bye! See you again!" +
+                    ConsoleColors.RESETCOLOR
+        )
+    }
+
+    private fun explainFirstChoice() {
+        println(
+            "you'll get a list of healthy fast food meals that can be prepared in 15 minutes" +
+                    " or less, with very low total fat, saturated fat, and carbohydrate values" +
+                    " compared to other meals in our list"
+        )
+    }
+
+    private fun explainSecondChoice() {
+        println(
+            "enter a country name, either in capital or small or even a mix. " +
+                    "don't worry about spelling mistakes! " +
+                    "and we will show all meals in our list related to that country"
+        )
+    }
+
+    private fun explainThirdChoice() {
         println("a list of Iraqi meals will be shown. you'll see any meal related to Iraq in our list")
     }
-    fun explainFourthChoice(){
-        println("Like a fun game, this feature suggests 10 random meals that are easy to prepare. " +
-                "A meal is considered easy if it requires 30 minutes or less, " +
-                "has 5 ingredients or fewer, and can be prepared in 6 steps or fewer.")
+
+    private fun explainFourthChoice() {
+        println(
+            "Like a fun game, this feature suggests 10 random meals that are easy to prepare. " +
+                    "A meal is considered easy if it requires 30 minutes or less, " +
+                    "has 5 ingredients or fewer, and can be prepared in 6 steps or fewer."
+        )
     }
-    fun explainFifthChoice(){
-        println("we'll show a random meal name and you'll guess its preparation time." +
-                " you have 3 attempts. After each attempt, we'll tell you whether the guessed time is correct," +
-                " too low, or too high. If all attempts are incorrect, we'll show you the correct time.")
+
+    private fun explainFifthChoice() {
+        println(
+            "we'll show a random meal name and you'll guess its preparation time." +
+                    " you have 3 attempts. After each attempt, we'll tell you whether the guessed time is correct," +
+                    " too low, or too high. If all attempts are incorrect, we'll show you the correct time."
+        )
     }
-    fun explainSixthChoice(){
-        println("if you are allergic to eggs, we'll suggest one sweet giving you the name and description" +
-                " that contains no eggs. you can either like it (to view full details) or dislike it (to get another egg-free sweet).")
+
+    private fun explainSixthChoice() {
+        println(
+            "if you are allergic to eggs, we'll suggest one sweet giving you the name and description" +
+                    " that contains no eggs. you can either like it (to view full details) or dislike it (to get another egg-free sweet)."
+        )
     }
-    fun explainSeventhChoice(){
-        println("if you are following Keto Diet, we can suggest one meal that can be included in your diet." +
-                "you can either like it (to view full details) or dislike it (to get another Keto meal).")
+
+    private fun explainSeventhChoice() {
+        println(
+            "if you are following Keto Diet, we can suggest one meal that can be included in your diet." +
+                    "you can either like it (to view full details) or dislike it (to get another Keto meal)."
+        )
     }
-    fun explainEighthChoice(){
+
+    private fun explainEighthChoice() {
         println("enter a date, and we'll show a list of meals that were added in that date")
     }
-    fun explainNinthChoice(){
-        println("enter a desired amount of calories and protein, " +
-                "and we will give you a list of meals that match or approximate those values.")
+
+    private fun explainNinthChoice() {
+        println(
+            "enter a desired amount of calories and protein, " +
+                    "and we will give you a list of meals that match or approximate those values."
+        )
     }
-    fun explainTenthChoice(){
-        println("enter a country name, and we'll return " +
-                "up to 20 randomly ordered meals related to that country.")
+
+    private fun explainTenthChoice() {
+        println(
+            "enter a country name, and we'll return " +
+                    "up to 20 randomly ordered meals related to that country."
+        )
     }
-    fun explainEleventhChoice(){
-        println("we'll Display a meal name and three ingredient options (one correct, two incorrect)." +
-                " you'll guess once. A correct guess earns 1000 points; an incorrect guess ends the game. " +
-                "The game also ends after 15 correct answers. we'll Display the final score at the end.")
+
+    private fun explainEleventhChoice() {
+        println(
+            "we'll Display a meal name and three ingredient options (one correct, two incorrect)." +
+                    " you'll guess once. A correct guess earns 1000 points; an incorrect guess ends the game. " +
+                    "The game also ends after 15 correct answers. we'll Display the final score at the end."
+        )
     }
-    fun explainTwelfthChoice() {
-        println("for potato lovers! we'll Show a random list of 10 meals that include potatoes " +
-                "in their ingredients.")
+
+    private fun explainTwelfthChoice() {
+        println(
+            "for potato lovers! we'll Show a random list of 10 meals that include potatoes " +
+                    "in their ingredients."
+        )
     }
-    fun explainThirteenthChoice(){
-        println("we'll Suggest a meal with more than 700 calories. you can either like it (to view full details)" +
-                " or dislike it (to get another meal with high calories). ")
+
+    private fun explainThirteenthChoice() {
+        println(
+            "we'll Suggest a meal with more than 700 calories. you can either like it (to view full details)" +
+                    " or dislike it (to get another meal with high calories). "
+        )
     }
-    fun explainFourteenthChoice(){
-        println("we'll Show a list of all seafood meals sorted by protein content, from highest to lowest." +
-                " we'll display the rank (starting from 1), meal name, and protein amount.")
+
+    private fun explainFourteenthChoice() {
+        println(
+            "we'll Show a list of all seafood meals sorted by protein content, from highest to lowest." +
+                    " we'll display the rank (starting from 1), meal name, and protein amount."
+        )
     }
-    fun explainFifteenthChoice(){
-        println("if u and A large group of friends are traveling to Italy," +
-                " we'll show you a list of original Italian dishes, that are suitable for large groups.")
+
+    private fun explainFifteenthChoice() {
+        println(
+            "if u and A large group of friends are traveling to Italy," +
+                    " we'll show you a list of original Italian dishes, that are suitable for large groups."
+        )
     }
-    fun showOptions(){
-        println("you can choose one of the following:" +
-                "1-  get a list of healthy fast food meals.\n" +
-                "2-  meal search by name.\n" +
-                "3-  Iraqi meals.\n" +
-                "4-  Easy Food Suggestion.\n" +
-                "5-  Guess Game.\n" +
-                "6-  Sweets with No Eggs.\n" +
-                "7-  Keto Diet Meal Helper." +
-                "8-  Search Foods by Add Date." +
-                "9-  Gym Helper.\n" +
-                "10- Explore Other Countries' Food Culture.\n" +
-                "11- Ingredient Game.\n" +
-                "12- I Love Potato.\n" +
-                "13- So Thin Problem.\n" +
-                "14- seafood meals.\n" +
-                "15- traveling to Italy.\n" +
-                "0-  Exit.\n")
+
+    private fun showOptions() {
+        println(
+            "you can choose one of the following:" +
+                    "1-  get a list of healthy fast food meals.\n" +
+                    "2-  meal search by name.\n" +
+                    "3-  Iraqi meals.\n" +
+                    "4-  Easy Food Suggestion.\n" +
+                    "5-  Guess Game.\n" +
+                    "6-  Sweets with No Eggs.\n" +
+                    "7-  Keto Diet Meal Helper." +
+                    "8-  Search Foods by Add Date." +
+                    "9-  Gym Helper.\n" +
+                    "10- Explore Other Countries' Food Culture.\n" +
+                    "11- Ingredient Game.\n" +
+                    "12- I Love Potato.\n" +
+                    "13- So Thin Problem.\n" +
+                    "14- seafood meals.\n" +
+                    "15- traveling to Italy.\n" +
+                    "0-  Exit.\n"
+        )
     }
-    fun getUserInput():String?{
-        return readlnOrNull()
+
+    private fun getUserInput(): String {
+        return readlnOrNull() ?: throw Exception("Can't be null")
     }
-    fun getUserChoice():Int?{
-        return readlnOrNull()?.toIntOrNull()
+
+    private fun getUserChoice(): Int {
+        return readlnOrNull()?.toIntOrNull() ?: throw Exception("invalid number")
+    }
+
+    private fun askUserToEnter(thingToEnter: String) {
+        println("Enter $thingToEnter:")
     }
 }
