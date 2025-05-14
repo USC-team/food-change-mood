@@ -2,7 +2,7 @@ package org.example.domain.usecase
 
 import domain.model.Meal
 import org.example.domain.repository.domain.repository.MealsRepository
-import org.example.domain.usecase.model.MealException
+import org.example.domain.usecase.model.MealNotFoundExceptions
 
 class GetSweetsWithNoEggsUseCase(private val repo: MealsRepository) {
 
@@ -15,7 +15,7 @@ class GetSweetsWithNoEggsUseCase(private val repo: MealsRepository) {
                     getMealsHasNoEggsIngredients(meal)}
             .randomOrNull()
             ?.also { chosenMealList.add(it) }
-         ?:throw MealException("No Meal Found")
+         ?:throw MealNotFoundExceptions("No Meal Found")
     }
     private fun getMealsHasNoEggsIngredients(meal:Meal):Boolean {
         return meal.ingredients?.none {
