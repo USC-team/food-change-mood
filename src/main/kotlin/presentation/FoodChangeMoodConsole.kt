@@ -2,12 +2,16 @@ package org.example.presentation
 
 import domain.model.Meal
 import domain.model.Nutrition
+import domain.usecase.GetKetoMealUseCase
 import org.example.domain.model.GuessResult
+import org.example.domain.usecase.GetEasyPreparedMealsUseCase
 import org.example.domain.usecase.GetGuessGameUseCase
 import org.example.domain.usecase.GetSweetsWithNoEggsUseCase
 
 class FoodChangeMoodConsole(private val getGuessGameUseCase: GetGuessGameUseCase,
-                            private val getSweetsWithNoEggsUseCase: GetSweetsWithNoEggsUseCase) {
+                            private val getSweetsWithNoEggsUseCase: GetSweetsWithNoEggsUseCase,
+                            private val getEasyPreparedMealsUseCase: GetEasyPreparedMealsUseCase,
+                            private val getKetoMealUseCase: GetKetoMealUseCase) {
 
     fun start() {
         greet()
@@ -23,11 +27,13 @@ class FoodChangeMoodConsole(private val getGuessGameUseCase: GetGuessGameUseCase
             }1 -> { explainFirstChoice()
             }3 -> { explainThirdChoice()
             }4 -> { explainFourthChoice()
+                    easyPrepareMeals()
             }5 -> { explainFifthChoice()
                     guessGame()
             }6 -> { explainSixthChoice()
-                    noEggsSweet(getSweetsWithNoEggsUseCase)
+                    noEggsSweet()
             }7 -> { explainSeventhChoice()
+                    ketoMeal()
             }else -> {
                 println( "${ConsoleColors.RED_COLOR}Invalid Choice!${ConsoleColors.RESET_COLOR}\n" +
                             "We'll support other features in the future!")
@@ -35,7 +41,19 @@ class FoodChangeMoodConsole(private val getGuessGameUseCase: GetGuessGameUseCase
         }
         chooseOption()
     }
+    private fun easyPrepareMeals() {
+        getEasyPreparedMealsUseCase.getEasyPreparedMeals().forEach{
+            println("\tMeal Name: ${ConsoleColors.GREEN_COLOR} ${it.name} ${ConsoleColors.RESET_COLOR}")
+        }
 
+    }
+    private fun ketoMeal(){
+        val meal = getKetoMealUseCase.getKetoMeal()
+        println("Meal Name:${ConsoleColors.GREEN_COLOR}  ${meal.name} ${ConsoleColors.RESET_COLOR}")
+        askUserIfLikedMeal()
+        if(didYouLikeIt()) showMealsDetails(meal)
+        else ketoMeal()
+    }
     private fun guessGame(){
         val meal= getGuessGameUseCase.getRandomMeal()
         println("Meal Name:${ConsoleColors.GREEN_COLOR}  ${meal.name} ${ConsoleColors.RESET_COLOR}")
@@ -65,12 +83,12 @@ class FoodChangeMoodConsole(private val getGuessGameUseCase: GetGuessGameUseCase
         }
         return false
     }
-    private fun noEggsSweet(getSweetsWithNoEggsUseCase: GetSweetsWithNoEggsUseCase){
+    private fun noEggsSweet(){
         val meal = getSweetsWithNoEggsUseCase.getMealHasNoEggs()
         println("Meal Name:${ConsoleColors.GREEN_COLOR}  ${meal.name} ${ConsoleColors.RESET_COLOR}")
         askUserIfLikedMeal()
         if(didYouLikeIt()) showMealsDetails(meal)
-        else noEggsSweet(getSweetsWithNoEggsUseCase)
+        else noEggsSweet()
     }
     private fun didYouLikeIt():Boolean {
         if(getUserInput().equals("y", ignoreCase = true))
