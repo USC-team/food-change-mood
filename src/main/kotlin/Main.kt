@@ -2,15 +2,19 @@ package org.example
 import org.example.presentation.FoodChangeMoodConsole
 
 import org.example.data.repository.MockDataMealRepository
+import org.example.dependencyInjection.appModule
 import org.example.domain.usecase.GetEasyPreparedMealsUseCase
 import org.example.domain.usecase.GetGuessGameUseCase
 import org.example.domain.usecase.GetSweetsWithNoEggsUseCase
+import org.koin.core.context.startKoin
+import org.koin.java.KoinJavaComponent.getKoin
 
 fun main() {
-    val repository = MockDataMealRepository()
-    val getGuessGameUseCase= GetGuessGameUseCase(repository)
-    val getSweetsWithNoEggsUseCase= GetSweetsWithNoEggsUseCase(repository)
-    val programConsole= FoodChangeMoodConsole(getGuessGameUseCase,getSweetsWithNoEggsUseCase)
+    startKoin {
+    modules(appModule)
+    }
+
+    val programConsole: FoodChangeMoodConsole = getKoin().get()
     programConsole.start()
 
     /*val mealsUseCase = GetEasyPreparedMealsUseCase(MockDataMealRepository())
