@@ -116,14 +116,17 @@ class FoodChangeMoodConsole() {
                     "Minutes:            ${meal.minutes}\n" +
                     "Contributor ID:     ${meal.contributorId}\n" +
                     "Submitted:          ${meal.submitted}\n" +
-                    "Tags:               ${meal.tags/*?.forEach { println("$it  ") }*/}\n"+
-                    "Nutrition:")
+                    "Tags:")
+        meal.tags?.forEach { println("$it  ") }
+        println(    "Nutrition:")
         printNutrients(meal)
-                    println(
-                    "Number of Steps:    ${meal.nSteps}\n" +
-                    "Steps:              ${meal.steps/*?.forEach { println("$it  ") }*/}\n" +
-                    "Description:        ${meal.description}\n" +
-                    "Ingredients:        ${meal.ingredients/*?.forEach { println("$it  ") }*/}\n" +
+        println(    "Number of Steps:    ${meal.nSteps}\n" +
+                    "Steps:")
+        meal.steps?.forEach { println("$it  ") }
+        println(    "Description:        ${meal.description}\n" +
+                    "Ingredients:")
+        meal.ingredients?.forEach { println("$it  ") }
+        println(
                     "Ingredients Number: ${meal.nIngredients}\n"
         )
     }
@@ -266,20 +269,20 @@ class FoodChangeMoodConsole() {
         println(
             "you can choose one of the following:" +
                     "1-  get a list of healthy fast food meals.\n" +
-                    "2-  meal search by name.\n" +
+                    //"2-  meal search by name.\n" +
                     "3-  Iraqi meals.\n" +
                     "4-  Easy Food Suggestion.\n" +
                     "5-  Guess Game.\n" +
                     "6-  Sweets with No Eggs.\n" +
                     "7-  Keto Diet Meal Helper." +
-                    "8-  Search Foods by Add Date." +
-                    "9-  Gym Helper.\n" +
-                    "10- Explore Other Countries' Food Culture.\n" +
-                    "11- Ingredient Game.\n" +
-                    "12- I Love Potato.\n" +
-                    "13- So Thin Problem.\n" +
-                    "14- seafood meals.\n" +
-                    "15- traveling to Italy.\n" +
+                   // "8-  Search Foods by Add Date." +
+                   // "9-  Gym Helper.\n" +
+                   // "10- Explore Other Countries' Food Culture.\n" +
+                    //"11- Ingredient Game.\n" +
+                    //"12- I Love Potato.\n" +
+                    //"13- So Thin Problem.\n" +
+                    //"14- seafood meals.\n" +
+                    //"15- traveling to Italy.\n" +
                     "0-  Exit.\n"
         )
     }
