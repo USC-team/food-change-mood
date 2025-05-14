@@ -7,7 +7,10 @@ import org.example.domain.usecase.GetGuessGameUseCase
 import org.example.domain.usecase.GetSweetsWithNoEggsUseCase
 
 fun main() {
-    val programConsole= FoodChangeMoodConsole()
+    val repository = MockDataMealRepository()
+    val getGuessGameUseCase= GetGuessGameUseCase(repository)
+    val getSweetsWithNoEggsUseCase= GetSweetsWithNoEggsUseCase(repository)
+    val programConsole= FoodChangeMoodConsole(getGuessGameUseCase,getSweetsWithNoEggsUseCase)
     programConsole.start()
 
     /*val mealsUseCase = GetEasyPreparedMealsUseCase(MockDataMealRepository())
