@@ -5,8 +5,10 @@ import domain.model.Nutrition
 import org.example.data.repository.MockDataMealRepository
 import org.example.domain.model.GuessResult
 import org.example.domain.usecase.GetGuessGameUseCase
+import org.example.domain.usecase.GetSweetsWithNoEggsUseCase
 
-class FoodChangeMoodConsole() {
+class FoodChangeMoodConsole(val getGuessGameUseCase: GetGuessGameUseCase,
+                            val getSweetsWithNoEggsUseCase: GetSweetsWithNoEggsUseCase) {
 
     fun start() {
         greet()
@@ -25,8 +27,7 @@ class FoodChangeMoodConsole() {
             }5 -> { explainFifthChoice()
                     guessGame()
             }6 -> { explainSixthChoice()
-                    val getGuessGameUseCase= GetGuessGameUseCase(MockDataMealRepository())
-                    noEggsSweet(getGuessGameUseCase)
+                    noEggsSweet(getSweetsWithNoEggsUseCase)
             }7 -> { explainSeventhChoice()
             }else -> {
                 println( "${ConsoleColors.RED_COLOR}Invalid Choice!${ConsoleColors.RESETCOLOR}\n" +
@@ -37,14 +38,13 @@ class FoodChangeMoodConsole() {
     }
 
     private fun guessGame(){
-        val getGuessGameUseCase= GetGuessGameUseCase(MockDataMealRepository())
         val meal= getGuessGameUseCase.getRandomMeal()
         println("Meal Name:${ConsoleColors.GREEN_COLOR}  ${meal.name} ${ConsoleColors.RESETCOLOR}")
-        if(! isCorrectGuess(meal = meal,getGuessGameUseCase= getGuessGameUseCase ) ) {
+        if(! isCorrectGuess(meal = meal) ) {
             println("${ConsoleColors.RED_COLOR} Failed!\n Correct answer is ${meal.minutes}${ConsoleColors.RESETCOLOR}")
         }
     }
-    private fun isCorrectGuess(tries: Int=3, meal: Meal, getGuessGameUseCase: GetGuessGameUseCase): Boolean {
+    private fun isCorrectGuess(tries: Int=3, meal: Meal): Boolean {
         if (tries > 0) {
             askUserToEnter("Guess Minutes")
             val guessResult = getGuessGameUseCase.isGuessCorrectHighOrLow(meal, getUserChoice())
@@ -55,24 +55,23 @@ class FoodChangeMoodConsole() {
                 }
                 GuessResult.Too_High -> {
                     println("You are Wrong! It's too high!")
-                    isCorrectGuess(tries - 1,meal,  getGuessGameUseCase)
+                    isCorrectGuess(tries - 1,meal)
                 }
 
                 GuessResult.Too_Low -> {
                     println("You are Wrong! It's too low!")
-                    isCorrectGuess(tries - 1, meal, getGuessGameUseCase)
+                    isCorrectGuess(tries - 1, meal)
                 }
             }
         }
         return false
     }
-    private fun noEggsSweet(getGuessGameUseCase: GetGuessGameUseCase){
-
+    private fun noEggsSweet(getSweetsWithNoEggsUseCase: GetSweetsWithNoEggsUseCase){
         val meal = getGuessGameUseCase.getRandomMeal()
         println("Meal Name:${ConsoleColors.GREEN_COLOR}  ${meal.name} ${ConsoleColors.RESETCOLOR}")
         askUserIfLikedMeal()
         if(didYouLikeIt()) showMealsDetails(meal)
-        else noEggsSweet(getGuessGameUseCase)
+        else noEggsSweet(getSweetsWithNoEggsUseCase)
     }
     private fun didYouLikeIt():Boolean {
         if(getUserInput().equals("y", ignoreCase = true))
