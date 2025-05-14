@@ -37,18 +37,6 @@ class GetEasyPreparedMealsUseCase(private val repo: MealsRepository) {
         return result.toList()
     }
 
-    /*fun List<Meal>.takeRandom(count: Int): List<Meal> {
-        val list = mutableListOf<Meal>()
-
-        for (i in 0 until count) {
-            val randomMeal = this[Random.Default.nextInt(this.size)]
-            if (!list.contains(randomMeal)) {
-                list.add(randomMeal)
-            }
-        }
-        return list
-    }*/
-
     private object Constants {
         const val REQUIRED_MINUTES_FOR_EASY_PREPARE = 30
         const val REQUIRED_NINGREDIENTS_FOR_EASY_PREPARE = 5
