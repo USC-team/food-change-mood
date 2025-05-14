@@ -19,7 +19,12 @@ class GetKetoMealUseCase(private val repo: MealsRepository) {
     fun isKetoMeal(meal: Meal): Boolean {
         val carbs = meal.nutrition?.carbohydrates ?: return false
         val protein = meal.nutrition.protein ?: return false
-        return carbs <= 15.0 && protein >= 10.0
+        return carbs <= Constants.REQUIRED_KETO_CARB && protein >= Constants.REQUIRED_KETO_PROTEIN
+    }
+
+    private object Constants {
+        const val REQUIRED_KETO_CARB = 15.0
+        const val REQUIRED_KETO_PROTEIN = 10.0
     }
 
 }
