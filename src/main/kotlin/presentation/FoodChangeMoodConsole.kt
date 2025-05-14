@@ -39,19 +39,12 @@ class FoodChangeMoodConsole() {
 
             5 -> {
                 explainFifthChoice()
-                val getGuessGameUseCase= GetGuessGameUseCase(MockDataMealRepository())
-                val meal= getGuessGameUseCase.getRandomMeal()
-                println("Meal Name:${ConsoleColors.GREEN_COLOR}  ${meal.name} ${ConsoleColors.RESETCOLOR}")
-                if(! isCorrectGuess(meal = meal,getGuessGameUseCase= getGuessGameUseCase ) ) {
-                    println("${ConsoleColors.RED_COLOR} Failed!\n Correct answer is ${meal.minutes}${ConsoleColors.RESETCOLOR}")
-                }
+                guessGame()
             }
 
             6 -> {
                 explainSixthChoice()
                 noEggsSweet()
-                //create val from no egg sweets use case and ask the user if they want to show details or show another one
-
             }
 
             7 -> {
@@ -69,14 +62,21 @@ class FoodChangeMoodConsole() {
         chooseOption()
     }
 
-
+    private fun guessGame(){
+        val getGuessGameUseCase= GetGuessGameUseCase(MockDataMealRepository())
+        val meal= getGuessGameUseCase.getRandomMeal()
+        println("Meal Name:${ConsoleColors.GREEN_COLOR}  ${meal.name} ${ConsoleColors.RESETCOLOR}")
+        if(! isCorrectGuess(meal = meal,getGuessGameUseCase= getGuessGameUseCase ) ) {
+            println("${ConsoleColors.RED_COLOR} Failed!\n Correct answer is ${meal.minutes}${ConsoleColors.RESETCOLOR}")
+        }
+    }
     private fun isCorrectGuess(tries: Int=3, meal: Meal, getGuessGameUseCase: GetGuessGameUseCase): Boolean {
         if (tries > 0) {
             askUserToEnter("Guess Minutes")
             val guessResult = getGuessGameUseCase.isGuessCorrectHighOrLow(meal, getUserChoice())
             when (guessResult) {
                 GuessResult.Correct -> {
-                    println("Excellent!")
+                    println("${ConsoleColors.GREEN_COLOR}Excellent!${ConsoleColors.RESETCOLOR}")
                     return true
                 }
                 GuessResult.Too_High -> {
@@ -117,21 +117,21 @@ class FoodChangeMoodConsole() {
                     "Contributor ID:     ${meal.contributorId}\n" +
                     "Submitted:          ${meal.submitted}\n" +
                     "Tags:")
-        meal.tags?.forEach { println("$it  ") }
+        meal.tags?.forEach { println("\t $it") }
         println(    "Nutrition:")
         printNutrients(meal)
         println(    "Number of Steps:    ${meal.nSteps}\n" +
                     "Steps:")
-        meal.steps?.forEach { println("$it  ") }
+        meal.steps?.forEach { println("\t $it  ") }
         println(    "Description:        ${meal.description}\n" +
                     "Ingredients:")
-        meal.ingredients?.forEach { println("$it  ") }
+        meal.ingredients?.forEach { println("\t $it  ") }
         println(
                     "Ingredients Number: ${meal.nIngredients}\n"
         )
     }
     private fun printNutrients(meal :Meal){
-        println("\n${meal.nutrition?.let { showNutrientsDetails(it) } ?: ""}\n")
+        meal.nutrition?.let { showNutrientsDetails(it) }
     }
     private fun showNutrientsDetails(nutrients: Nutrition) {
         println(
@@ -141,7 +141,7 @@ class FoodChangeMoodConsole() {
                     "\tSodium:        ${nutrients.sodium}\n" +
                     "\tProtein:       ${nutrients.protein}\n" +
                     "\tSaturated Fat: ${nutrients.saturatedFat}\n" +
-                    "\tCarbohydrates: ${nutrients.carbohydrates}\n"
+                    "\tCarbohydrates: ${nutrients.carbohydrates}"
         )
     }
 
@@ -183,8 +183,8 @@ class FoodChangeMoodConsole() {
 
     private fun explainFourthChoice() {
         println(
-            "Like a fun game, this feature suggests 10 random meals that are easy to prepare. " +
-                    "A meal is considered easy if it requires 30 minutes or less, " +
+            "Like a fun game, this feature suggests 10 random meals that are easy to prepare. \n" +
+                    "A meal is considered easy if it requires 30 minutes or less, \n" +
                     "has 5 ingredients or fewer, and can be prepared in 6 steps or fewer."
         )
     }
