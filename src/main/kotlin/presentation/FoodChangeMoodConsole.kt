@@ -2,6 +2,9 @@ package org.example.presentation
 
 import domain.model.Meal
 import domain.model.Nutrition
+import org.example.data.repository.MockDataMealRepository
+import org.example.domain.model.GuessResult
+import org.example.domain.usecase.GetGuessGameUseCase
 
 class FoodChangeMoodConsole() {
 
@@ -36,14 +39,17 @@ class FoodChangeMoodConsole() {
 
             5 -> {
                 explainFifthChoice()
-                /*val guessGameUseCase =
-                val meal = guessGameUseCase.getRandomMeal
-                if(!implementGuessGame(3, meal) println("Failed!\n Correct Minutes ${meal.minutes}")
-                */
+                val getGuessGameUseCase= GetGuessGameUseCase(MockDataMealRepository())
+                val meal= getGuessGameUseCase.getRandomMeal()
+                println("Meal Name:${ConsoleColors.GREEN_COLOR}  ${meal.name} ${ConsoleColors.RESETCOLOR}")
+                if(! isCorrectGuess(meal = meal,getGuessGameUseCase= getGuessGameUseCase ) ) {
+                    println("${ConsoleColors.RED_COLOR} Failed!\n Correct answer is ${meal.minutes}${ConsoleColors.RESETCOLOR}")
+                }
             }
 
             6 -> {
                 explainSixthChoice()
+                noEggsSweet()
                 //create val from no egg sweets use case and ask the user if they want to show details or show another one
 
             }
@@ -63,28 +69,46 @@ class FoodChangeMoodConsole() {
         chooseOption()
     }
 
-    private fun implementGuessGame(tries: Int, meal: Meal): Boolean {
+
+    private fun isCorrectGuess(tries: Int=3, meal: Meal, getGuessGameUseCase: GetGuessGameUseCase): Boolean {
         if (tries > 0) {
-            /*
-    println(meal.name)
-    askUserToEnter("Guess Minutes")
+            askUserToEnter("Guess Minutes")
+            val guessResult = getGuessGameUseCase.isGuessCorrectHighOrLow(meal, getUserChoice())
+            when (guessResult) {
+                GuessResult.Correct -> {
+                    println("Excellent!")
+                    return true
+                }
+                GuessResult.Too_High -> {
+                    println("You are Wrong! It's too high!")
+                    isCorrectGuess(tries - 1,meal,  getGuessGameUseCase)
+                }
 
-    val guessResult = guessGameUseCase.isCorrectGuess(meal, getUserChoice())
-    when (guessResult) {
-    Correct -> {println("Excellent!") return true}
-    Too_High -> {
-        println("You are Wrong! It's too high!")
-        implementGuessGame(tries - 1, meal)
+                GuessResult.Too_Low -> {
+                    println("You are Wrong! It's too low!")
+                    isCorrectGuess(tries - 1, meal, getGuessGameUseCase)
+                }
+            }
+        }
+        return false
     }
-
-    Too_Low -> {
-        println("You are Wrong! It's too low!")
-        implementGuessGame(tries - 1,meal)
+    private fun noEggsSweet(){
+        val getGuessGameUseCase= GetGuessGameUseCase(MockDataMealRepository())
+        val meal = getGuessGameUseCase.getRandomMeal()
+        println("Meal Name:${ConsoleColors.GREEN_COLOR}  ${meal.name} ${ConsoleColors.RESETCOLOR}")
+        askUserIfLikedMeal()
+        if(didYouLikeIt()) showMealsDetails(meal)
+        else noEggsSweet()
     }
-    }*/ return true
-        } else return false
+    private fun didYouLikeIt():Boolean {
+        if(getUserInput().equals("y", ignoreCase = true))
+            return true
+        return false
     }
-
+    private fun askUserIfLikedMeal() {
+    println("Do you like this meal? if you like it, we'll show you the details,\n" +
+            " if not, we'll suggest another one! (Y/N)")
+    }
     private fun showMealsDetails(meal: Meal) {
         println(
                     "Name:               ${meal.name}\n" +
@@ -92,19 +116,23 @@ class FoodChangeMoodConsole() {
                     "Minutes:            ${meal.minutes}\n" +
                     "Contributor ID:     ${meal.contributorId}\n" +
                     "Submitted:          ${meal.submitted}\n" +
-                    "Tags:               ${meal.tags?.forEach { println("$it  ") }}\n" +
-                    "Nutrition:\n${showNutrientsDetails(meal.nutrition ?: throw Exception("Nutrition is null"))}\n" +
+                    "Tags:               ${meal.tags/*?.forEach { println("$it  ") }*/}\n"+
+                    "Nutrition:")
+        printNutrients(meal)
+                    println(
                     "Number of Steps:    ${meal.nSteps}\n" +
-                    "Steps:              ${meal.steps?.forEach { println("$it  ") }}\n" +
+                    "Steps:              ${meal.steps/*?.forEach { println("$it  ") }*/}\n" +
                     "Description:        ${meal.description}\n" +
-                    "Ingredients:        ${meal.ingredients?.forEach { println("$it  ") }}\n" +
+                    "Ingredients:        ${meal.ingredients/*?.forEach { println("$it  ") }*/}\n" +
                     "Ingredients Number: ${meal.nIngredients}\n"
         )
     }
-
+    private fun printNutrients(meal :Meal){
+        println("\n${meal.nutrition?.let { showNutrientsDetails(it) } ?: ""}\n")
+    }
     private fun showNutrientsDetails(nutrients: Nutrition) {
         println(
-            "\tCalories:      ${nutrients.calories}\n" +
+                    "\tCalories:      ${nutrients.calories}\n" +
                     "\tTotal Fat:     ${nutrients.totalFat}\n" +
                     "\tSugar:         ${nutrients.sugar}\n" +
                     "\tSodium:        ${nutrients.sodium}\n" +
@@ -160,8 +188,8 @@ class FoodChangeMoodConsole() {
 
     private fun explainFifthChoice() {
         println(
-            "we'll show a random meal name and you'll guess its preparation time." +
-                    " you have 3 attempts. After each attempt, we'll tell you whether the guessed time is correct," +
+            "we'll show a random meal name and you'll guess its preparation time.\n" +
+                    " you have 3 attempts. After each attempt, we'll tell you whether the guessed time is correct,\n" +
                     " too low, or too high. If all attempts are incorrect, we'll show you the correct time."
         )
     }
@@ -261,7 +289,17 @@ class FoodChangeMoodConsole() {
     }
 
     private fun getUserChoice(): Int {
-        return readlnOrNull()?.toIntOrNull() ?: throw Exception("invalid number")
+        while (true) {
+            askUserToEnter("Choice")
+            val input = readlnOrNull()
+            val number = input?.toIntOrNull()
+
+            if (number != null) {
+                return number
+            } else {
+                println("Invalid number. Please try again.")
+            }
+        }
     }
 
     private fun askUserToEnter(thingToEnter: String) {

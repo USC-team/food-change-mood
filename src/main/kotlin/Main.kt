@@ -10,7 +10,7 @@ fun main() {
     val programConsole= FoodChangeMoodConsole()
     programConsole.start()
 
-    val mealsUseCase = GetEasyPreparedMealsUseCase(MockDataMealRepository())
+    /*val mealsUseCase = GetEasyPreparedMealsUseCase(MockDataMealRepository())
     mealsUseCase.getEasyPreparedMeals().forEach {
         println("name: ${it.name}")
     }
@@ -23,5 +23,5 @@ fun main() {
 
     println(GetSweetsWithNoEggsUseCase(MockDataMealRepository()).getMealHasNoEggs().name)
     println(GetSweetsWithNoEggsUseCase(MockDataMealRepository()).getMealHasNoEggs().name)
-
+*/
 }
