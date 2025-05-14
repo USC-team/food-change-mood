@@ -1,6 +1,6 @@
 package org.example.domain.model
 
-enum class CorrectHighLow {
+enum class GuessResult {
     Correct,
     Too_High,
     Too_Low
