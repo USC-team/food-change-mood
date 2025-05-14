@@ -1,8 +1,8 @@
-package org.example.data.repository.data.repository
+package org.example.data.repository
 
 import domain.model.Meal
 import domain.model.Nutrition
-import org.example.domain.repository.domain.repository.MealsRepository
+import org.example.domain.repository.MealsRepository
 
 class MockDataMealRepository : MealsRepository {
     override fun getAllMeals(): List<Meal> {

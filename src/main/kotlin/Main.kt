@@ -1,17 +1,27 @@
 package org.example
 import org.example.presentation.FoodChangeMoodConsole
 
-import org.example.data.repository.data.repository.MockDataMealRepository
+import org.example.data.repository.MockDataMealRepository
 import org.example.domain.usecase.GetEasyPreparedMealsUseCase
+import org.example.domain.usecase.GetGuessGameUseCase
+import org.example.domain.usecase.GetSweetsWithNoEggsUseCase
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 fun main() {
     val programConsole= FoodChangeMoodConsole()
     programConsole.start()
 
     val mealsUseCase = GetEasyPreparedMealsUseCase(MockDataMealRepository())
     mealsUseCase.getEasyPreparedMeals().forEach {
-        println(it.name)
+        println("name: ${it.name}")
     }
+    val randomMealUseCase= GetGuessGameUseCase(MockDataMealRepository())
+    val meal = randomMealUseCase.getRandomMeal()
+    val guessedMinutes=20
+    println("name:${randomMealUseCase.getRandomMeal().name}\n" +
+            "correct minutes:${randomMealUseCase.getRandomMeal().minutes} \n" +
+            "guessed minutes:$guessedMinutes ${randomMealUseCase.isGuessCorrectHighOrLow(meal,guessedMinutes)}")
+
+    println(GetSweetsWithNoEggsUseCase(MockDataMealRepository()).getMealHasNoEggs().name)
+    println(GetSweetsWithNoEggsUseCase(MockDataMealRepository()).getMealHasNoEggs().name)
+
 }
