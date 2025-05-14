@@ -25,7 +25,8 @@ class FoodChangeMoodConsole() {
             }5 -> { explainFifthChoice()
                     guessGame()
             }6 -> { explainSixthChoice()
-                    noEggsSweet()
+                    val getGuessGameUseCase= GetGuessGameUseCase(MockDataMealRepository())
+                    noEggsSweet(getGuessGameUseCase)
             }7 -> { explainSeventhChoice()
             }else -> {
                 println( "${ConsoleColors.RED_COLOR}Invalid Choice!${ConsoleColors.RESETCOLOR}\n" +
@@ -65,13 +66,13 @@ class FoodChangeMoodConsole() {
         }
         return false
     }
-    private fun noEggsSweet(){
-        val getGuessGameUseCase= GetGuessGameUseCase(MockDataMealRepository())
+    private fun noEggsSweet(getGuessGameUseCase: GetGuessGameUseCase){
+
         val meal = getGuessGameUseCase.getRandomMeal()
         println("Meal Name:${ConsoleColors.GREEN_COLOR}  ${meal.name} ${ConsoleColors.RESETCOLOR}")
         askUserIfLikedMeal()
         if(didYouLikeIt()) showMealsDetails(meal)
-        else noEggsSweet()
+        else noEggsSweet(getGuessGameUseCase)
     }
     private fun didYouLikeIt():Boolean {
         if(getUserInput().equals("y", ignoreCase = true))
