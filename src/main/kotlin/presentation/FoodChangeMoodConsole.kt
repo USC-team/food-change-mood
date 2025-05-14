@@ -2,13 +2,12 @@ package org.example.presentation
 
 import domain.model.Meal
 import domain.model.Nutrition
-import org.example.data.repository.MockDataMealRepository
 import org.example.domain.model.GuessResult
 import org.example.domain.usecase.GetGuessGameUseCase
 import org.example.domain.usecase.GetSweetsWithNoEggsUseCase
 
-class FoodChangeMoodConsole(val getGuessGameUseCase: GetGuessGameUseCase,
-                            val getSweetsWithNoEggsUseCase: GetSweetsWithNoEggsUseCase) {
+class FoodChangeMoodConsole(private val getGuessGameUseCase: GetGuessGameUseCase,
+                            private val getSweetsWithNoEggsUseCase: GetSweetsWithNoEggsUseCase) {
 
     fun start() {
         greet()
@@ -30,7 +29,7 @@ class FoodChangeMoodConsole(val getGuessGameUseCase: GetGuessGameUseCase,
                     noEggsSweet(getSweetsWithNoEggsUseCase)
             }7 -> { explainSeventhChoice()
             }else -> {
-                println( "${ConsoleColors.RED_COLOR}Invalid Choice!${ConsoleColors.RESETCOLOR}\n" +
+                println( "${ConsoleColors.RED_COLOR}Invalid Choice!${ConsoleColors.RESET_COLOR}\n" +
                             "We'll support other features in the future!")
             }
         }
@@ -39,9 +38,9 @@ class FoodChangeMoodConsole(val getGuessGameUseCase: GetGuessGameUseCase,
 
     private fun guessGame(){
         val meal= getGuessGameUseCase.getRandomMeal()
-        println("Meal Name:${ConsoleColors.GREEN_COLOR}  ${meal.name} ${ConsoleColors.RESETCOLOR}")
+        println("Meal Name:${ConsoleColors.GREEN_COLOR}  ${meal.name} ${ConsoleColors.RESET_COLOR}")
         if(! isCorrectGuess(meal = meal) ) {
-            println("${ConsoleColors.RED_COLOR} Failed!\n Correct answer is ${meal.minutes}${ConsoleColors.RESETCOLOR}")
+            println("${ConsoleColors.RED_COLOR} Failed!\n Correct answer is ${meal.minutes}${ConsoleColors.RESET_COLOR}")
         }
     }
     private fun isCorrectGuess(tries: Int=3, meal: Meal): Boolean {
@@ -50,15 +49,15 @@ class FoodChangeMoodConsole(val getGuessGameUseCase: GetGuessGameUseCase,
             val guessResult = getGuessGameUseCase.isGuessCorrectHighOrLow(meal, getUserChoice())
             when (guessResult) {
                 GuessResult.Correct -> {
-                    println("${ConsoleColors.GREEN_COLOR}Excellent!${ConsoleColors.RESETCOLOR}")
+                    println("${ConsoleColors.GREEN_COLOR}Excellent!${ConsoleColors.RESET_COLOR}")
                     return true
                 }
-                GuessResult.Too_High -> {
+                GuessResult.TooHigh -> {
                     println("You are Wrong! It's too high!")
                     isCorrectGuess(tries - 1,meal)
                 }
 
-                GuessResult.Too_Low -> {
+                GuessResult.TooLow -> {
                     println("You are Wrong! It's too low!")
                     isCorrectGuess(tries - 1, meal)
                 }
@@ -67,8 +66,8 @@ class FoodChangeMoodConsole(val getGuessGameUseCase: GetGuessGameUseCase,
         return false
     }
     private fun noEggsSweet(getSweetsWithNoEggsUseCase: GetSweetsWithNoEggsUseCase){
-        val meal = getGuessGameUseCase.getRandomMeal()
-        println("Meal Name:${ConsoleColors.GREEN_COLOR}  ${meal.name} ${ConsoleColors.RESETCOLOR}")
+        val meal = getSweetsWithNoEggsUseCase.getMealHasNoEggs()
+        println("Meal Name:${ConsoleColors.GREEN_COLOR}  ${meal.name} ${ConsoleColors.RESET_COLOR}")
         askUserIfLikedMeal()
         if(didYouLikeIt()) showMealsDetails(meal)
         else noEggsSweet(getSweetsWithNoEggsUseCase)
@@ -122,7 +121,7 @@ class FoodChangeMoodConsole(val getGuessGameUseCase: GetGuessGameUseCase,
         println(
             ConsoleColors.MAGENTA_COLOR +
                     "***Welcome in USC Personal Finance Tracker***" +
-                    ConsoleColors.RESETCOLOR
+                    ConsoleColors.RESET_COLOR
         )
     }
 
@@ -130,7 +129,7 @@ class FoodChangeMoodConsole(val getGuessGameUseCase: GetGuessGameUseCase,
         println(
             ConsoleColors.MAGENTA_COLOR +
                     "Bye Bye! See you again!" +
-                    ConsoleColors.RESETCOLOR
+                    ConsoleColors.RESET_COLOR
         )
     }
 
