@@ -2,11 +2,12 @@ package org.example.domain.usecase
 import domain.model.Meal
 import org.example.domain.model.CorrectHighLow
 import org.example.domain.repository.domain.repository.MealsRepository
+import org.example.domain.usecase.model.MealException
 
 class GetGuessGameUseCase(private val repo: MealsRepository) {
     fun getRandomMeal(): Meal {
         return repo.getAllMeals().filter(::getNotNullMeals).randomOrNull()
-            ?:throw Exception("Meal Not Found")
+            ?:throw MealException("Meal Not Found")
     }
 
     fun isGuessCorrectHighOrLow(meal: Meal, guessMinutes: Int): CorrectHighLow {
