@@ -1,12 +1,55 @@
 package org.example.data.repository
 
+import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
+import data.repository.CsvParsers
 import domain.model.Meal
 import domain.model.Nutrition
 import org.example.domain.repository.MealsRepository
+import java.io.File
 
 class MockDataMealRepository : MealsRepository {
+    private val reader = csvReader {
+        delimiter = ','
+        quoteChar = '"'              // respect quoted fields
+        skipEmptyLine = true             // drops totally blank lines
+        skipMissMatchedRow = true            // drops any row with wrong # of columns
+    }
+
+    fun loadAll(): List<Meal> =
+        reader
+            .readAllWithHeader(File("food.csv"))
+            .map(::mapRowToMeal)
+
+    private fun mapRowToMeal(row: Map<String, String>): Meal = Meal(
+        name = row["name"] ?: "",
+        id = row["id"]?.toInt() ?: 0,
+        minutes = row["minutes"]?.toInt(),
+        contributorId = row["contributor_id"]?.toInt(),
+        submitted = row["submitted"] ?: "",
+        tags = CsvParsers.parseStringList(row["tags"] ?: ""),
+        nutrition = Nutrition(
+            calories = row["calories"]?.toDouble(),
+            totalFat = row["total_fat"]?.toDouble(),
+            sugar = row["sugar"]?.toDouble(),
+            sodium = row["sodium"]?.toDouble(),
+            protein = row["protein"]?.toDouble(),
+            saturatedFat = row["saturated_fat"]?.toDouble(),
+            carbohydrates = row["carbohydrates"]?.toDouble()
+        ),
+        nSteps = row["n_steps"]?.toInt(),
+        steps = CsvParsers.parseStringList(row["steps"] ?: ""),
+        description = row["description"] ?: "",
+        ingredients = CsvParsers.parseStringList(row["ingredients"] ?: ""),
+        nIngredients = row["n_ingredients"]?.toInt()
+    )
+
     override fun getAllMeals(): List<Meal> {
-        return listOf(
+        return reader
+            .readAllWithHeader(File("food.csv"))
+            .map(::mapRowToMeal)
+
+
+        /*return listOf(
             Meal(
                 id = 137739,
                 name = "arriba   baked winter squash mexican style",
@@ -1658,7 +1701,7 @@ class MockDataMealRepository : MealsRepository {
                 ),
                 nIngredients = 8
             )
-        )
+        )*/
     }
 
 }
