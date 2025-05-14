@@ -8,7 +8,7 @@ import org.example.domain.usecase.model.MealNotFoundExceptions
 class GetGuessGameUseCase(private val repo: MealsRepository) {
     fun getRandomMeal(): Meal {
         return repo.getAllMeals().filter(::getNotNullMeals).randomOrNull()
-            ?:throw MealNotFoundExceptions("Meal Not Found")
+            ?:throw MealNotFoundExceptions()
     }
 
     fun isGuessCorrectHighOrLow(meal: Meal, guessMinutes: Int): GuessResult {

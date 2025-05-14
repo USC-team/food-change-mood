@@ -15,7 +15,7 @@ class GetSweetsWithNoEggsUseCase(private val repo: MealsRepository) {
                     getMealsHasNoEggsIngredients(meal)}
             .randomOrNull()
             ?.also { chosenMealList.add(it) }
-         ?:throw MealNotFoundExceptions("No Meal Found")
+         ?:throw MealNotFoundExceptions()
     }
     private fun getMealsHasNoEggsIngredients(meal:Meal):Boolean {
         return meal.ingredients?.none {
