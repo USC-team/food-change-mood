@@ -12,12 +12,12 @@ fun main() {
     }
     val randomMealUseCase= GetGuessGameUseCase(MockDataMealRepository())
     val meal = randomMealUseCase.getRandomMeal()
+    val guessedMinutes=20
     println("name:${randomMealUseCase.getRandomMeal().name}\n" +
             "correct minutes:${randomMealUseCase.getRandomMeal().minutes} \n" +
-            "guessed minutes ${randomMealUseCase.isGuessCorrectHighOrLow(meal,50)}")
+            "guessed minutes:$guessedMinutes ${randomMealUseCase.isGuessCorrectHighOrLow(meal,guessedMinutes)}")
 
-    val mealHasNoEggs= GetSweetsWithNoEggsUseCase(MockDataMealRepository()).getMealHasNoEggs()
-    println(mealHasNoEggs.name)
-    val mealHasNoEggs2= GetSweetsWithNoEggsUseCase(MockDataMealRepository()).getMealHasNoEggs()
-    println(mealHasNoEggs2.name)
+    println(GetSweetsWithNoEggsUseCase(MockDataMealRepository()).getMealHasNoEggs().name)
+    println(GetSweetsWithNoEggsUseCase(MockDataMealRepository()).getMealHasNoEggs().name)
+
 }
