@@ -7,3 +7,5 @@ class InvalidDateFormatException(input: String)
 
 class NoMealsFoundException(date: LocalDate)
     : Exception("No meals found for date $date.")
+
+class MealNotFoundExceptions : Exception("No Meal Found")
