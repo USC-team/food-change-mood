@@ -1,23 +1,37 @@
 package org.example.domain.usecase
 
 import domain.model.Meal
+import domain.model.Nutrition
 import org.example.domain.repository.domain.repository.MealsRepository
 
-class GetHealthyMealsUseCase (private val repo : MealsRepository){
 
-    fun  getAllHealthyMeals () :List<Meal>{
-        val allMeals = repo.getAllMeals().filter { it.minutes != null && it.nutrition != null }
-        val  totalFat = allMeals.mapNotNull { it.nutrition?.totalFat }.average()
-        val  carbohydrates = allMeals.mapNotNull { it.nutrition?.carbohydrates }.average()
-        val  saturatedFat = allMeals.mapNotNull { it.nutrition?.saturatedFat }.average()
-        val result=  allMeals.filter {
-            it.minutes!! <= 15 &&
-                     it.nutrition?.totalFat!! < totalFat &&
-                         it.nutrition.saturatedFat!! < saturatedFat &&
-                             it.nutrition.carbohydrates!! < carbohydrates
+class GetHealthyMealsUseCase(private val repo: MealsRepository) {
+
+    fun getHealthyQuickMealsBelowAverage(): List<Meal> =
+        repo.getAllMeals().let { meals ->
+            val (avgTotalFat, avgSaturatedFat, avgCarbohydrates) = meals.averageNutritionValues()
+            meals.filter { meal ->
+                meal.minutes?.let { it < 15 } == true &&
+                        meal.nutrition?.let { nutrition ->
+                            listOfNotNull(
+                                nutrition.totalFat?.let { it < avgTotalFat },
+                                nutrition.saturatedFat?.let { it < avgSaturatedFat },
+                                nutrition.carbohydrates?.let { it < avgCarbohydrates }
+                            ).all { it }
+                        } == true
+            }
         }
-        return result
 
+   private fun List<Meal>.averageNutrition(selector: (Nutrition) -> Double?): Double =
+        this.mapNotNull { it.nutrition?.let(selector) }.average()
+
+    private fun List<Meal>.averageNutritionValues(): Triple<Double, Double, Double> {
+        val avgTotalFat = averageNutrition { it.totalFat }
+        val avgSaturatedFat = averageNutrition { it.saturatedFat }
+        val avgCarbohydrates = averageNutrition { it.carbohydrates }
+        return Triple(avgTotalFat, avgSaturatedFat, avgCarbohydrates)
     }
 
+
 }
+

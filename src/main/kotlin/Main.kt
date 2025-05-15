@@ -14,10 +14,10 @@ fun main() {
     mealsUseCase.getEasyPreparedMeals().forEach {
         println(it.name)
     }
-    healthyMealsUseCase.getAllHealthyMeals().forEach {
+    healthyMealsUseCase.getHealthyQuickMealsBelowAverage().forEach {
         println(it)
     }
-    iraqMealsUseCase.getSpecialIraqMeals("iraqi").forEach {
+    iraqMealsUseCase.getSpecialIraqMeals().forEach {
         println(it)
     }
 
