@@ -6,14 +6,14 @@ import domain.model.Nutrition
 object CsvParsers {
 
   fun parseToMeal(row: Map<String, String>): Meal {
-    val nutritionValues = CsvParsers.parseDoubleList(row["nutrition"] ?: "")
+    val nutritionValues = parseDoubleList(row["nutrition"] ?: "")
     return Meal(
       name = row["name"] ?: "",
       id = row["id"]?.toInt() ?: 0,
       minutes = row["minutes"]?.toInt(),
       contributorId = row["contributor_id"]?.toInt(),
       submitted = row["submitted"] ?: "",
-      tags = CsvParsers.parseStringList(row["tags"] ?: ""),
+      tags = parseStringList(row["tags"] ?: ""),
       nutrition = Nutrition(
         calories = nutritionValues.getOrNull(0),
         totalFat =nutritionValues.getOrNull(1),
@@ -24,9 +24,9 @@ object CsvParsers {
         carbohydrates = nutritionValues.getOrNull(6),
       ),
       nSteps = row["n_steps"]?.toInt(),
-      steps = CsvParsers.parseStringList(row["steps"] ?: ""),
+      steps = parseStringList(row["steps"] ?: ""),
       description = row["description"] ?: "",
-      ingredients = CsvParsers.parseStringList(row["ingredients"] ?: ""),
+      ingredients = parseStringList(row["ingredients"] ?: ""),
       nIngredients = row["n_ingredients"]?.toInt()
     )
   }
