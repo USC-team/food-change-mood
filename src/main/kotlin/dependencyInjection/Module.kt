@@ -9,9 +9,11 @@ import org.example.domain.usecase.GetGuessGameUseCase
 import org.example.domain.usecase.GetSweetsWithNoEggsUseCase
 import org.example.presentation.FoodChangeMoodConsole
 import org.koin.dsl.module
+import java.io.File
 
 val appModule = module {
-    single<MealsRepository> { MockDataMealRepository(CsvParsers) }
+    single { File("food.csv") }
+    single<MealsRepository> { MockDataMealRepository(get()) }
     single { GetGuessGameUseCase(get()) }
     single { GetSweetsWithNoEggsUseCase(get()) }
     single { GetEasyPreparedMealsUseCase(get()) }
