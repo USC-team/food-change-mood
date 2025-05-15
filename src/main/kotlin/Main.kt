@@ -1,5 +1,4 @@
 package org.example
-import org.example.presentation.FoodChangeMoodConsole
 import org.example.dependencyInjection.appModule
 import org.example.domain.usecase.SearchMealsByDateUseCase
 import org.koin.core.context.startKoin
@@ -10,11 +9,11 @@ fun main() {
     modules(appModule)
     }
 
-    val programConsole: FoodChangeMoodConsole = getKoin().get()
-    programConsole.start()
+   /* val programConsole: FoodChangeMoodConsole = getKoin().get()
+    programConsole.start()*/
 
     val searchUseCase= SearchMealsByDateUseCase(getKoin().get())
-    searchUseCase.searchMealOn("2002-06-17").forEach {
+    searchUseCase.searchMealBy("2002-06-17").forEach {
         print(it)
     }
 }
