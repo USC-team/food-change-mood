@@ -9,9 +9,7 @@ class UncompletedTasks {
         )
     }
 
-    private fun explainEighthChoice() {
-        println("enter a date, and we'll show a list of meals that were added in that date")
-    }
+
 
     private fun explainNinthChoice() {
         println(

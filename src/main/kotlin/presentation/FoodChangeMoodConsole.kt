@@ -3,15 +3,20 @@ package org.example.presentation
 import domain.model.Meal
 import domain.model.Nutrition
 import domain.usecase.GetKetoMealUseCase
+import domain.usecase.exceptions.InvalidDateFormatException
+import domain.usecase.exceptions.MealNotFoundExceptions
+import domain.usecase.exceptions.NoMealsFoundException
 import org.example.domain.model.GuessResult
 import org.example.domain.usecase.GetEasyPreparedMealsUseCase
 import org.example.domain.usecase.GetGuessGameUseCase
 import org.example.domain.usecase.GetSweetsWithNoEggsUseCase
+import org.example.domain.usecase.SearchMealsByDateUseCase
 
 class FoodChangeMoodConsole(private val getGuessGameUseCase: GetGuessGameUseCase,
                             private val getSweetsWithNoEggsUseCase: GetSweetsWithNoEggsUseCase,
                             private val getEasyPreparedMealsUseCase: GetEasyPreparedMealsUseCase,
-                            private val getKetoMealUseCase: GetKetoMealUseCase) {
+                            private val getKetoMealUseCase: GetKetoMealUseCase,
+                            private val searchMealsByDateUseCase: SearchMealsByDateUseCase ) {
 
     fun start() {
         greet()
@@ -34,12 +39,34 @@ class FoodChangeMoodConsole(private val getGuessGameUseCase: GetGuessGameUseCase
                     noEggsSweet()
             }7 -> { explainSeventhChoice()
                     ketoMeal()
+            }8-> { explainEighthChoice()
+                    val meals= getMealsByDate()
+                    showMealsIDsAndNames(meals)
+                    if(meals.isNotEmpty()) getMealsByID(meals)
             }else -> {
                 println( "${ConsoleColors.RED_COLOR}Invalid Choice!${ConsoleColors.RESET_COLOR}\n" +
                             "We'll support other features in the future!")
             }
         }
         chooseOption()
+    }
+    private fun getMealsByDate(): List<Meal> {
+        askUserToEnter("Date")
+        return runCatching { searchMealsByDateUseCase.searchMealOn(getUserInput()) }
+            .getOrElse { e ->
+                when (e) {
+                    is NoMealsFoundException,
+                    is InvalidDateFormatException -> {
+                        println("${ConsoleColors.RED_COLOR}${e.message}${ConsoleColors.RESET_COLOR}")
+                        emptyList()
+                    }
+                    else -> throw e
+                }
+            }
+    }
+    private fun getMealsByID(meals: List<Meal>) {
+        askUserToEnter("the ID of the meal to show its details")
+        showMealsDetails(meals,getUserChoice())
     }
     private fun easyPrepareMeals() {
         getEasyPreparedMealsUseCase.getEasyPreparedMeals().forEach{
@@ -62,26 +89,20 @@ class FoodChangeMoodConsole(private val getGuessGameUseCase: GetGuessGameUseCase
         }
     }
     private fun isCorrectGuess(tries: Int=3, meal: Meal): Boolean {
-        if (tries > 0) {
-            askUserToEnter("Guess Minutes")
-            val guessResult = getGuessGameUseCase.isGuessCorrectHighOrLow(meal, getUserChoice())
-            when (guessResult) {
-                GuessResult.Correct -> {
-                    println("${ConsoleColors.GREEN_COLOR}Excellent!${ConsoleColors.RESET_COLOR}")
-                    return true
-                }
-                GuessResult.TooHigh -> {
-                    println("You are Wrong! It's too high!")
-                    isCorrectGuess(tries - 1,meal)
-                }
-
-                GuessResult.TooLow -> {
-                    println("You are Wrong! It's too low!")
-                    isCorrectGuess(tries - 1, meal)
-                }
+        if (tries <= 0) return false
+        askUserToEnter("Guess Minutes")
+        return when (val guessResult = getGuessGameUseCase.isGuessCorrectHighOrLow(meal, getUserChoice())) {
+            GuessResult.Correct -> {
+                println("${ConsoleColors.GREEN_COLOR}Excellent!${ConsoleColors.RESET_COLOR}")
+                true
+            } GuessResult.TooHigh -> {
+                println("You are Wrong! It's too high!")
+                isCorrectGuess(tries - 1, meal)
+            } GuessResult.TooLow -> {
+                println("You are Wrong! It's too low!")
+                isCorrectGuess(tries - 1, meal)
             }
         }
-        return false
     }
     private fun noEggsSweet(){
         val meal = getSweetsWithNoEggsUseCase.getMealHasNoEggs()
@@ -98,6 +119,15 @@ class FoodChangeMoodConsole(private val getGuessGameUseCase: GetGuessGameUseCase
     private fun askUserIfLikedMeal() {
     println("Do you like this meal? if you like it, we'll show you the details,\n" +
             " if not, we'll suggest another one! (Y/N)")
+    }
+    private fun showMealsIDsAndNames(mealList: List<Meal>){
+        mealList.forEach { meal ->
+            println(" Meal Name: ${ConsoleColors.GREEN_COLOR} ${meal.name}  ${ConsoleColors.RESET_COLOR}\n" +
+                    " Meal ID:   ${ConsoleColors.GREEN_COLOR} ${meal.id}  ${ConsoleColors.RESET_COLOR}")
+        }
+    }
+    private fun showMealsDetails(mealList: List<Meal>, id:Int){
+        showMealsDetails(mealList.find { it.id==id }?:throw MealNotFoundExceptions())
     }
     private fun showMealsDetails(meal: Meal) {
         println(
@@ -192,17 +222,21 @@ class FoodChangeMoodConsole(private val getGuessGameUseCase: GetGuessGameUseCase
                     "you can either like it (to view full details) or dislike it (to get another Keto meal)."
         )
     }
+    private fun explainEighthChoice() {
+        println("enter a date, and we'll show a list of meals that were added in that date\n" +
+                "the format should be yyyy-MM-dd")
+    }
     private fun showOptions() {
         println(
-            "you can choose one of the following:" +
+            "you can choose one of the following:\n" +
                     "1-  get a list of healthy fast food meals.\n" +
                     //"2-  meal search by name.\n" +
                     "3-  Iraqi meals.\n" +
                     "4-  Easy Food Suggestion.\n" +
                     "5-  Guess Game.\n" +
                     "6-  Sweets with No Eggs.\n" +
-                    "7-  Keto Diet Meal Helper." +
-                   // "8-  Search Foods by Add Date." +
+                    "7-  Keto Diet Meal Helper.\n" +
+                    "8-  Search Foods by Add Date.\n" +
                    // "9-  Gym Helper.\n" +
                    // "10- Explore Other Countries' Food Culture.\n" +
                     //"11- Ingredient Game.\n" +
@@ -219,16 +253,10 @@ class FoodChangeMoodConsole(private val getGuessGameUseCase: GetGuessGameUseCase
     }
 
     private fun getUserChoice(): Int {
-        while (true) {
-            askUserToEnter("Choice")
-            val input = readlnOrNull()
-            val number = input?.toIntOrNull()
-
-            if (number != null) {
-                return number
-            } else {
-                println("Invalid number. Please try again.")
-            }
+        val number = readlnOrNull()?.toIntOrNull()
+        return number ?: run {
+            println("Invalid number. Please try again.")
+            getUserChoice()
         }
     }
 
