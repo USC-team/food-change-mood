@@ -1,8 +1,8 @@
 package org.example.domain.usecase
 import domain.model.Meal
+import domain.usecase.exceptions.MealNotFoundExceptions
 import org.example.domain.model.GuessResult
 import org.example.domain.repository.MealsRepository
-import org.example.domain.usecase.model.MealNotFoundExceptions
 
 
 class GetGuessGameUseCase(private val repo: MealsRepository) {
