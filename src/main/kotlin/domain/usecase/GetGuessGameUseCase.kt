@@ -13,8 +13,8 @@ class GetGuessGameUseCase(private val repo: MealsRepository) {
 
     fun isGuessCorrectHighOrLow(meal: Meal, guessMinutes: Int): GuessResult {
         return if( meal.minutes == guessMinutes)GuessResult.Correct
-                else if(meal.minutes!! > guessMinutes) GuessResult.Too_Low
-                else GuessResult.Too_High
+                else if(meal.minutes!! > guessMinutes) GuessResult.TooLow
+                else GuessResult.TooHigh
     }
 
     private fun getNotNullMeals(meal: Meal): Boolean {
