@@ -1,6 +1,6 @@
 package domain.model
 
-class Nutrition(
+data class Nutrition(
     val calories: Double?,
     val totalFat: Double?,
     val sugar: Double?,
