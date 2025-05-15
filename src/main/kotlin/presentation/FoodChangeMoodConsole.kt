@@ -52,14 +52,17 @@ class FoodChangeMoodConsole(private val getGuessGameUseCase: GetGuessGameUseCase
     }
     private fun getMealsByDate(): List<Meal> {
         askUserToEnter("Date")
-        try {
-            return searchMealsByDateUseCase.searchMealOn(getUserInput())
-        } catch (e: NoMealsFoundException) {
-            println("${ConsoleColors.RED_COLOR}${e.message}${ConsoleColors.RESET_COLOR}")
-        } catch (e: InvalidDateFormatException) {
-            println("${ConsoleColors.RED_COLOR} ${e.message}${ConsoleColors.RESET_COLOR}")
-        }
-        return emptyList()
+        return runCatching { searchMealsByDateUseCase.searchMealOn(getUserInput()) }
+            .getOrElse { e ->
+                when (e) {
+                    is NoMealsFoundException,
+                    is InvalidDateFormatException -> {
+                        println("${ConsoleColors.RED_COLOR}${e.message}${ConsoleColors.RESET_COLOR}")
+                        emptyList()
+                    }
+                    else -> throw e
+                }
+            }
     }
     private fun getMealsByID(meals: List<Meal>) {
         askUserToEnter("the ID of the meal to show its details")
@@ -86,26 +89,20 @@ class FoodChangeMoodConsole(private val getGuessGameUseCase: GetGuessGameUseCase
         }
     }
     private fun isCorrectGuess(tries: Int=3, meal: Meal): Boolean {
-        if (tries > 0) {
-            askUserToEnter("Guess Minutes")
-            val guessResult = getGuessGameUseCase.isGuessCorrectHighOrLow(meal, getUserChoice())
-            when (guessResult) {
-                GuessResult.Correct -> {
-                    println("${ConsoleColors.GREEN_COLOR}Excellent!${ConsoleColors.RESET_COLOR}")
-                    return true
-                }
-                GuessResult.TooHigh -> {
-                    println("You are Wrong! It's too high!")
-                    isCorrectGuess(tries - 1,meal)
-                }
-
-                GuessResult.TooLow -> {
-                    println("You are Wrong! It's too low!")
-                    isCorrectGuess(tries - 1, meal)
-                }
+        if (tries <= 0) return false
+        askUserToEnter("Guess Minutes")
+        return when (val guessResult = getGuessGameUseCase.isGuessCorrectHighOrLow(meal, getUserChoice())) {
+            GuessResult.Correct -> {
+                println("${ConsoleColors.GREEN_COLOR}Excellent!${ConsoleColors.RESET_COLOR}")
+                true
+            } GuessResult.TooHigh -> {
+                println("You are Wrong! It's too high!")
+                isCorrectGuess(tries - 1, meal)
+            } GuessResult.TooLow -> {
+                println("You are Wrong! It's too low!")
+                isCorrectGuess(tries - 1, meal)
             }
         }
-        return false
     }
     private fun noEggsSweet(){
         val meal = getSweetsWithNoEggsUseCase.getMealHasNoEggs()
@@ -256,16 +253,10 @@ class FoodChangeMoodConsole(private val getGuessGameUseCase: GetGuessGameUseCase
     }
 
     private fun getUserChoice(): Int {
-        while (true) {
-            askUserToEnter("Choice")
-            val input = readlnOrNull()
-            val number = input?.toIntOrNull()
-
-            if (number != null) {
-                return number
-            } else {
-                println("Invalid number. Please try again.")
-            }
+        val number = readlnOrNull()?.toIntOrNull()
+        return number ?: run {
+            println("Invalid number. Please try again.")
+            getUserChoice()
         }
     }
 
