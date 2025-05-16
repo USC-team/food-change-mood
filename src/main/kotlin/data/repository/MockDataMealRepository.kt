@@ -1,0 +1,22 @@
+package org.example.data.repository
+
+import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
+import data.repository.CsvParsers.parseToMeal
+import domain.model.Meal
+import org.example.domain.repository.MealsRepository
+import java.io.File
+
+class MockDataMealRepository(private val csvFile: File) : MealsRepository {
+    private val reader = csvReader {
+        delimiter = ','
+        quoteChar = '"'              // respect quoted fields
+        skipEmptyLine = true             // drops totally blank lines
+        skipMissMatchedRow = true            // drops any row with wrong # of columns
+    }
+
+    override fun getAllMeals(): List<Meal> {
+        return reader
+            .readAllWithHeader(csvFile)
+            .map(::parseToMeal)
+    }
+}

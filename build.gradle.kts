@@ -11,6 +11,9 @@ repositories {
 
 dependencies {
     testImplementation(kotlin("test"))
+    implementation("com.github.doyaaaaaken:kotlin-csv-jvm:1.4.0")
+    implementation(project.dependencies.platform("io.insert-koin:koin-bom:4.0.3"))
+    implementation("io.insert-koin:koin-core")
 }
 
 tasks.test {

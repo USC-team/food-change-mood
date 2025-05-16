@@ -51,6 +51,3 @@ data class Meal(
     }
 }
 
-
-
-
