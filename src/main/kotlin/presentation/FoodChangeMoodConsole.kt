@@ -6,12 +6,16 @@ import domain.usecase.GetKetoMealUseCase
 import org.example.domain.model.GuessResult
 import org.example.domain.usecase.GetEasyPreparedMealsUseCase
 import org.example.domain.usecase.GetGuessGameUseCase
+import org.example.domain.usecase.GetHealthyMealsUseCase
+import org.example.domain.usecase.GetSpecialIraqMealsUseCae
 import org.example.domain.usecase.GetSweetsWithNoEggsUseCase
 
 class FoodChangeMoodConsole(private val getGuessGameUseCase: GetGuessGameUseCase,
                             private val getSweetsWithNoEggsUseCase: GetSweetsWithNoEggsUseCase,
                             private val getEasyPreparedMealsUseCase: GetEasyPreparedMealsUseCase,
-                            private val getKetoMealUseCase: GetKetoMealUseCase) {
+                            private val getKetoMealUseCase: GetKetoMealUseCase
+                            ,private val getSpecialIraqMealsUseCae: GetSpecialIraqMealsUseCae,
+                            private  val  getHealthyMealsUseCase: GetHealthyMealsUseCase) {
 
     fun start() {
         greet()
@@ -25,7 +29,9 @@ class FoodChangeMoodConsole(private val getGuessGameUseCase: GetGuessGameUseCase
             0 -> { sayGoodBye()
                     return
             }1 -> { explainFirstChoice()
+                    getHealthyAndFastMeals()
             }3 -> { explainThirdChoice()
+                    getIraqMeals()
             }4 -> { explainFourthChoice()
                     easyPrepareMeals()
             }5 -> { explainFifthChoice()
@@ -40,6 +46,13 @@ class FoodChangeMoodConsole(private val getGuessGameUseCase: GetGuessGameUseCase
             }
         }
         chooseOption()
+    }
+    private  fun getHealthyAndFastMeals (){
+        println("\t Meal Name :${getHealthyMealsUseCase.getHealthyQuickMealsBelowAverage()}")
+    }
+
+    private  fun getIraqMeals (){
+        println("\t Meal Name :${getSpecialIraqMealsUseCae.getSpecialIraqMeals()}")
     }
     private fun easyPrepareMeals() {
         getEasyPreparedMealsUseCase.getEasyPreparedMeals().forEach{

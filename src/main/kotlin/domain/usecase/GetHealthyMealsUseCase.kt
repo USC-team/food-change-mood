@@ -2,13 +2,14 @@ package org.example.domain.usecase
 
 import domain.model.Meal
 import domain.model.Nutrition
-import org.example.domain.repository.domain.repository.MealsRepository
+import org.example.domain.repository.MealsRepository
 
 
 class GetHealthyMealsUseCase(private val repo: MealsRepository) {
 
 
-    fun getHealthyQuickMealsBelowAverage(): List<Meal> = repo.getAllMeals().let { meals ->
+    fun getHealthyQuickMealsBelowAverage(): List<Meal> =
+        repo.getAllMeals().let { meals ->
         val (avgTotalFat, avgSaturatedFat, avgCarbohydrates) = meals.averageNutritionValues()
         meals.filter {
             getMealsLowFatAndMinute(
