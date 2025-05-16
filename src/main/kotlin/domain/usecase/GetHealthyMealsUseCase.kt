@@ -8,7 +8,7 @@ import org.example.domain.repository.MealsRepository
 class GetHealthyMealsUseCase(private val repo: MealsRepository) {
 
 
-    fun getHealthyQuickMealsBelowAverage(): List<Meal> =
+   fun getHealthyQuickMealsBelowAverage(): List<Meal> =
         repo.getAllMeals().let { meals ->
         val (avgTotalFat, avgSaturatedFat, avgCarbohydrates) = meals.averageNutritionValues()
         meals.filter {
