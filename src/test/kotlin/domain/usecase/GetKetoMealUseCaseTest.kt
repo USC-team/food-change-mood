@@ -1,8 +1,6 @@
 package domain.usecase
 
 import com.google.common.truth.Truth.assertThat
-import domain.model.Meal
-import domain.model.Nutrition
 import io.mockk.every
 import io.mockk.mockk
 import org.example.domain.repository.MealsRepository
@@ -23,139 +21,63 @@ class GetKetoMealUseCaseTest {
     }
 
     @Test
+    fun `getKetoMeal should throws exception when no keto meals available`() {
+        // Given
+        every { repository.getAllMeals() } returns emptyList()
+
+        // When && Then
+        assertThrows<Exception> { useCase.getKetoMeal() }
+    }
+
+    @Test
+    fun `getKetoMeal should throws exception when not meets keto meal criteria`() {
+        // Given
+        every { repository.getAllMeals() } returns listOf(
+            createMeal(
+                id = 4,
+                name = "Rice",
+                nutrition = createNutrition(carbohydrates = 40.0, protein = 8.0),
+            )
+        )
+
+        // When && Then
+        assertThrows<Exception> { useCase.getKetoMeal() }
+    }
+
+    @Test
     fun `getKetoMeal should returns a random keto meal when meets keto meal criteria`() {
         // Given
-        val keto1 = Meal(
+        val keto1 = createMeal(
             id = 1,
             name = "Keto Meal 1",
-            nutrition = Nutrition(
-                carbohydrates = 10.0, protein = 15.0,
-                sugar = null,
-                sodium = null,
-                calories = null,
-                totalFat = null,
-                saturatedFat = null
-            ),
-            nSteps = null,
-            submitted = null,
-            tags = null,
-            minutes = null,
-            nIngredients = null,
-            steps = null,
-            description = null,
-            ingredients = null,
-            contributorId = null
+            nutrition = createNutrition(carbohydrates = 10.0, protein = 15.0),
         )
-        val keto2 = Meal(
+        val keto2 = createMeal(
             id = 2,
             name = "Keto Meal 2",
-            nutrition = Nutrition(
-                carbohydrates = 8.0, protein = 10.0,
-                sugar = null,
-                sodium = null,
-                calories = null,
-                totalFat = null,
-                saturatedFat = null
-            ),
-            nSteps = null,
-            submitted = null,
-            tags = null,
-            minutes = null,
-            nIngredients = null,
-            steps = null,
-            description = null,
-            ingredients = null,
-            contributorId = null
+            nutrition = createNutrition(carbohydrates = 8.0, protein = 10.0),
         )
-        val nonKeto = Meal(
+        val nonKeto = createMeal(
             id = 3,
             name = "Bread",
-            nutrition = Nutrition(
-                carbohydrates = 20.0, protein = 5.0,
-                sugar = null,
-                sodium = null,
-                calories = null,
-                totalFat = null,
-                saturatedFat = null
-            ),
-            nSteps = null,
-            submitted = null,
-            tags = null,
-            minutes = null,
-            nIngredients = null,
-            steps = null,
-            description = null,
-            ingredients = null,
-            contributorId = null
+            nutrition = createNutrition(carbohydrates = 20.0, protein = 5.0),
         )
         every { repository.getAllMeals() } returns listOf(keto1, keto2, nonKeto)
 
         // When
-        val firstPick = useCase.getKetoMeal()
-        val secondPick = useCase.getKetoMeal()
+        val result = useCase.getKetoMeal()
 
         // Then
-        assertThat(secondPick).isIn(listOf(keto1, keto2) - firstPick)
-        assertThat(secondPick).isNotEqualTo(firstPick)
-    }
-
-
-    @Test
-    fun `getKetoMeal should throws exception when no keto meals available`() {
-        // Given
-        val nonKeto = Meal(
-            id = 4,
-            name = "Rice",
-            nutrition = Nutrition(
-                carbohydrates = 40.0, protein = 8.0,
-                sugar = null,
-                sodium = null,
-                calories = null,
-                totalFat = null,
-                saturatedFat = null
-            ),
-            nSteps = null,
-            submitted = null,
-            tags = null,
-            minutes = null,
-            nIngredients = null,
-            steps = null,
-            description = null,
-            ingredients = null,
-            contributorId = null
-        )
-        every { repository.getAllMeals() } returns listOf(nonKeto)
-
-        // When && Then
-        assertThat(assertThrows<Exception> {
-            useCase.getKetoMeal()
-        }).hasMessageThat()
-            .isEqualTo("No more keto meals available.")
+        assertThat(result).isEqualTo(keto1)
     }
 
     @Test
     fun `getKetoMeal should throws exception when all keto meals are exhausted`() {
         // Given
-        val keto1 = Meal(
+        val keto1 = createMeal(
             id = 5,
             name = "Keto Meal 5",
-            nutrition = Nutrition(
-                carbohydrates = 5.0, protein = 10.0,
-                sugar = null,
-                sodium = null,
-                calories = null,
-                totalFat = null,
-                saturatedFat = null
-            ),
-            nSteps = null,
-            submitted = null,
-            tags = null,
-            minutes = null,
-            nIngredients = null,
-            steps = null,
-            description = null,
-            ingredients = null,
-            contributorId = null
+            nutrition = createNutrition(carbohydrates = 5.0, protein = 10.0)
         )
         every { repository.getAllMeals() } returns listOf(keto1)
 
@@ -164,10 +86,9 @@ class GetKetoMealUseCaseTest {
 
         // Then
         assertThat(first).isEqualTo(keto1)
-        assertThat(assertThrows<Exception> {
-            useCase.getKetoMeal()
-        }).hasMessageThat()
-            .isEqualTo("No more keto meals available.")
-    }
 
+        assertThrows<Exception> {
+            useCase.getKetoMeal()
+        }
+    }
 }

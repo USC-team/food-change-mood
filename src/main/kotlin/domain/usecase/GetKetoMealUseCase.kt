@@ -1,6 +1,7 @@
 package domain.usecase
 
 import domain.model.Meal
+import domain.usecase.exceptions.MealNotFoundExceptions
 import org.example.domain.repository.MealsRepository
 
 class GetKetoMealUseCase(private val repo: MealsRepository) {
@@ -13,7 +14,7 @@ class GetKetoMealUseCase(private val repo: MealsRepository) {
             }
             .randomOrNull()
             ?.also { ketoMealList.add(it) }
-            ?: throw kotlin.Exception("No more keto meals available.")
+            ?: throw MealNotFoundExceptions()
     }
 
      private fun isKetoMeal(meal: Meal): Boolean {
