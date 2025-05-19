@@ -23,7 +23,7 @@ class GetKetoMealUseCaseTest {
     }
 
     @Test
-    fun `getKetoMeal returns a random keto meal without duplicate`() {
+    fun `getKetoMeal should returns a random keto meal when meets keto meal criteria`() {
         // Given
         val keto1 = Meal(
             id = 1,
@@ -101,7 +101,7 @@ class GetKetoMealUseCaseTest {
 
 
     @Test
-    fun `getKetoMeal throws exception when no keto meals available`() {
+    fun `getKetoMeal should throws exception when no keto meals available`() {
         // Given
         val nonKeto = Meal(
             id = 4,
@@ -134,7 +134,7 @@ class GetKetoMealUseCaseTest {
     }
 
     @Test
-    fun `getKetoMeal throws exception when all keto meals are exhausted`() {
+    fun `getKetoMeal should throws exception when all keto meals are exhausted`() {
         // Given
         val keto1 = Meal(
             id = 5,
