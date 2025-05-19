@@ -39,9 +39,9 @@ class GetEasyPreparedMealsUseCase(private val repo: MealsRepository) {
     }
 
     private companion object Constants {
-        private const val REQUIRED_MINUTES_FOR_EASY_PREPARE = 30
-        private const val REQUIRED_NINGREDIENTS_FOR_EASY_PREPARE = 5
-        private const val REQUIRED_NSTEPS_FOR_EASY_PREPARE = 6
-        private const val TEN_RANDOM_MEALS = 10
+        const val REQUIRED_MINUTES_FOR_EASY_PREPARE = 30
+        const val REQUIRED_NINGREDIENTS_FOR_EASY_PREPARE = 5
+        const val REQUIRED_NSTEPS_FOR_EASY_PREPARE = 6
+        const val TEN_RANDOM_MEALS = 10
     }
 }
