@@ -4,7 +4,7 @@ import domain.model.Meal
 import org.example.domain.repository.MealsRepository
 
 class GetKetoMealUseCase(private val repo: MealsRepository) {
-    val ketoMealList = mutableSetOf<Meal>()
+    private val ketoMealList = mutableSetOf<Meal>()
 
     fun getKetoMeal(): Meal {
         return repo.getAllMeals()
@@ -16,15 +16,14 @@ class GetKetoMealUseCase(private val repo: MealsRepository) {
             ?: throw kotlin.Exception("No more keto meals available.")
     }
 
-    fun isKetoMeal(meal: Meal): Boolean {
+     private fun isKetoMeal(meal: Meal): Boolean {
         val carbs = meal.nutrition?.carbohydrates ?: return false
         val protein = meal.nutrition.protein ?: return false
-        return carbs <= Constants.REQUIRED_KETO_CARB && protein >= Constants.REQUIRED_KETO_PROTEIN
+        return carbs <= REQUIRED_KETO_CARB && protein >= REQUIRED_KETO_PROTEIN
     }
 
-    private object Constants {
-        const val REQUIRED_KETO_CARB = 15.0
-        const val REQUIRED_KETO_PROTEIN = 10.0
+    companion object Constants {
+        private const val REQUIRED_KETO_CARB = 15.0
+        private const val REQUIRED_KETO_PROTEIN = 10.0
     }
-
 }
