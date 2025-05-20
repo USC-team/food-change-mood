@@ -11,9 +11,13 @@ repositories {
 
 dependencies {
     testImplementation(kotlin("test"))
+    testImplementation("com.google.truth:truth:1.4.4")
     implementation("com.github.doyaaaaaken:kotlin-csv-jvm:1.4.0")
     implementation(project.dependencies.platform("io.insert-koin:koin-bom:4.0.3"))
     implementation("io.insert-koin:koin-core")
+    testImplementation ("io.kotest:kotest-assertions-core:V6.0.0.M4")
+
+
 }
 
 tasks.test {

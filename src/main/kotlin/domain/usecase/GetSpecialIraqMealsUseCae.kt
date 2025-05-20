@@ -14,10 +14,10 @@ class GetSpecialIraqMealsUseCae (private val repo: MealsRepository){
             .filter {isIraqiMeal(it) && isEmptyTagAndDescriptionOrMeal(it)}
     }
 
-    private fun isIraqiMeal(meal : Meal) : Boolean =
+     fun isIraqiMeal(meal : Meal) : Boolean =
         meal.tags?.any{it.contains(IRAQ,ignoreCase = true)} == true || meal.description?.contains(IRAQI,ignoreCase = true) == true
 
 
-    private fun isEmptyTagAndDescriptionOrMeal(meal : Meal) : Boolean =
+   public  fun isEmptyTagAndDescriptionOrMeal(meal : Meal) : Boolean =
         meal.tags?.isNotEmpty() == true || meal.description?.isNotEmpty() == true
 }
