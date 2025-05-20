@@ -11,12 +11,11 @@ import org.junit.jupiter.api.assertThrows
 
 class GetKetoMealUseCaseTest {
 
-    private lateinit var repository: MealsRepository
+    private var repository: MealsRepository = mockk(relaxed = true)
     private lateinit var useCase: GetKetoMealUseCase
 
     @BeforeEach
     fun setup() {
-        repository = mockk(relaxed = true)
         useCase = GetKetoMealUseCase(repository)
     }
 
