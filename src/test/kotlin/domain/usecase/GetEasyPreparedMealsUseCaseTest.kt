@@ -48,7 +48,7 @@ class GetEasyPreparedMealsUseCaseTest {
     }
 
     @Test
-    fun `getEasyPrepared should returns 1 item from list when meet easy criteria`() {
+    fun `getEasyPrepared should returns only items that meets easyMeal criteria`() {
         // Given
         every { repository.getAllMeals() } returns listOf(
             createMeal(id = 1, name = "Easy", minutes = 15, nIngredients = 2, nSteps = 3),
@@ -103,7 +103,7 @@ class GetEasyPreparedMealsUseCaseTest {
         val result = useCase.getEasyPreparedMeals()
 
         // Then
-        assertThat(result.map { it.id }.toSet()).hasSize(10)
+        assertThat(result.toSet()).hasSize(10)
     }
 
 
