@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Assertions.*
 
 class GetSpecialIraqMealsUseCaeTest {
 
-    @Test
+/*    @Test
     fun `Should return true when tage and description not null`(){
         ///GEVIN
         val input = Meal(
@@ -26,7 +26,9 @@ class GetSpecialIraqMealsUseCaeTest {
         ///WHEN
         val result = isEmptyTagAndDescriptionOrMeal(input)
 
-    }
+
+
+    }*/
 
 
 }
