@@ -1,17 +1,14 @@
 package domain.usecase
-
-import domain.usecase.createMeal
+import com.google.common.truth.Truth.assertThat
 import io.mockk.every
 import io.mockk.mockk
 import org.example.domain.model.GuessResult
 import org.example.domain.repository.MealsRepository
 import org.example.domain.usecase.GetGuessGameUseCase
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.assertNotNull
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
+
 
 class GetGuessGameUseCaseTest {
     private lateinit var repository: MealsRepository
@@ -22,7 +19,6 @@ class GetGuessGameUseCaseTest {
         repository = mockk(relaxed = true)
         useCase = GetGuessGameUseCase(repository)
     }
-    //fun isGuessCorrectHighOrLow(meal: Meal, guessMinutes: Int): GuessResult
     @Test
     fun `isGuessCorrectHighOrLow should Correct true when a correct guess entered for a given meal`(){
         //Given
@@ -31,7 +27,7 @@ class GetGuessGameUseCaseTest {
         //When
         val guessResult= useCase.isGuessCorrectHighOrLow(meal,guessMinutes)
         //Then
-        assertEquals(guessResult, GuessResult.Correct)
+        assertThat(guessResult).isEqualTo(GuessResult.Correct)
     }
 
     @Test
@@ -42,7 +38,7 @@ class GetGuessGameUseCaseTest {
         //When
         val guessResult= useCase.isGuessCorrectHighOrLow(meal,guessMinutes)
         //Then
-        assertEquals(guessResult, GuessResult.TooHigh)
+        assertThat(guessResult).isEqualTo(GuessResult.TooHigh)
     }
     @Test
     fun `isGuessCorrectHighOrLow should return TooLow when a guess is less than correct minutes for a given meal`(){
@@ -52,7 +48,7 @@ class GetGuessGameUseCaseTest {
         //When
         val guessResult= useCase.isGuessCorrectHighOrLow(meal,guessMinutes)
         //Then
-        assertEquals(guessResult, GuessResult.TooLow)
+        assertThat(guessResult).isEqualTo(GuessResult.TooLow)
     }
     @Test
     fun `isGuessCorrectHighOrLow should throw an exception when a the meal has no minutes`(){
@@ -63,8 +59,6 @@ class GetGuessGameUseCaseTest {
         assertThrows<Exception>{useCase.isGuessCorrectHighOrLow(meal,guessMinutes) }
     }
     ///////////////////////////////////////
-    //fun getRandomMeal(): Meal
-    ///////////////////////////////////////
     @Test
     fun `getRandomMeal should return a meal when there are meals in the list`(){
         //Given
@@ -74,7 +68,7 @@ class GetGuessGameUseCaseTest {
         //When
         val meal=useCase.getRandomMeal()
         //Then
-        assertNotNull(meal)
+        assertThat(meal).isNotNull()
     }
     @Test
     fun `getRandomMeal should return a meal that has minutes when there are meals in the list that have no minutes`(){
@@ -85,7 +79,7 @@ class GetGuessGameUseCaseTest {
         //When
         val meal=useCase.getRandomMeal()
         //Then
-        assertEquals(repository.getAllMeals()[0], meal)
+        assertThat(meal.minutes).isNotNull()
     }
 
     @Test
