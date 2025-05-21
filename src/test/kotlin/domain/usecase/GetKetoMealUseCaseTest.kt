@@ -1,6 +1,7 @@
 package domain.usecase
 
 import com.google.common.truth.Truth.assertThat
+import domain.usecase.exceptions.MealNotFoundExceptions
 import io.mockk.every
 import io.mockk.mockk
 import org.example.domain.repository.MealsRepository
@@ -25,7 +26,7 @@ class GetKetoMealUseCaseTest {
         every { repository.getAllMeals() } returns emptyList()
 
         // When && Then
-        assertThrows<Exception> { useCase.getKetoMeal() }
+        assertThrows<MealNotFoundExceptions> { useCase.getKetoMeal() }
     }
 
     @Test
@@ -40,7 +41,7 @@ class GetKetoMealUseCaseTest {
         )
 
         // When && Then
-        assertThrows<Exception> { useCase.getKetoMeal() }
+        assertThrows<MealNotFoundExceptions> { useCase.getKetoMeal() }
     }
 
     @Test
@@ -86,7 +87,7 @@ class GetKetoMealUseCaseTest {
         // Then
         assertThat(first).isEqualTo(keto1)
 
-        assertThrows<Exception> {
+        assertThrows<MealNotFoundExceptions> {
             useCase.getKetoMeal()
         }
     }
