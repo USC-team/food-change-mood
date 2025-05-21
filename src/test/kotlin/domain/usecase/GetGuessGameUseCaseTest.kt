@@ -57,7 +57,6 @@ class GetGuessGameUseCaseTest {
         //When &&Then
         assertThrows<Exception>{useCase.isGuessCorrectHighOrLow(meal,guessMinutes) }
     }
-    ///////////////////////////////////////
     @Test
     fun `getRandomMeal should return a meal when there are meals in the list`(){
         //Given
