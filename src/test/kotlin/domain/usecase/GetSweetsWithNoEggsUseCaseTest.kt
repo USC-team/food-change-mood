@@ -112,9 +112,10 @@ class GetSweetsWithNoEggsUseCaseTest {
             createMeal(id = 3, name = "Eggs2", ingredients = listOf("onion", "meat", "egg"))
         )
         // When
-        val meal1= useCase.getMealHasNoEggs()
+        useCase.getMealHasNoEggs()
         //Then
         assertThrows<MealNotFoundExceptions> { useCase.getMealHasNoEggs() }
+
     }
 
 }
