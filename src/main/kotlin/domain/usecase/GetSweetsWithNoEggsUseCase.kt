@@ -22,6 +22,6 @@ class GetSweetsWithNoEggsUseCase(private val repo: MealsRepository) {
             it.contains("egg", ignoreCase = true)} == true
     }
     private fun getNotNullMeals(meal: Meal): Boolean {
-        return meal.ingredients != null
+        return meal.ingredients != null && meal.ingredients.isNotEmpty()
     }
 }

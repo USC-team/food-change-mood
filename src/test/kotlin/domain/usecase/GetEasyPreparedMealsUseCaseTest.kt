@@ -1,7 +1,6 @@
 package domain.usecase
 
 import com.google.common.truth.Truth.assertThat
-import domain.model.Meal
 import io.mockk.every
 import io.mockk.mockk
 import org.example.domain.repository.MealsRepository
@@ -10,12 +9,11 @@ import org.junit.jupiter.api.Test
 
 class GetEasyPreparedMealsUseCaseTest {
 
-    private lateinit var repository: MealsRepository
+    private var repository: MealsRepository = mockk(relaxed = true)
     private lateinit var useCase: GetEasyPreparedMealsUseCase
 
     @BeforeEach
     fun setup() {
-        repository = mockk(relaxed = true)
         useCase = GetEasyPreparedMealsUseCase(repository)
     }
 
@@ -36,18 +34,21 @@ class GetEasyPreparedMealsUseCaseTest {
         // Given
         every { repository.getAllMeals() } returns listOf(
             createMeal(id = 1, name = "Salad", minutes = 10, nIngredients = 3, nSteps = 2),
-            createMeal(id = 2, name = "Smoothie", minutes = 5, nIngredients = 4, nSteps = 1)
+            createMeal(id = 2, name = "Smoothie", minutes = 5, nIngredients = 4, nSteps = 1),
+            createMeal(id = 3, name = "Smoothie", minutes = 45, nIngredients = 4, nSteps = 1),
+            createMeal(id = 4, name = "Smoothie", minutes = 5, nIngredients = 10, nSteps = 1),
+            createMeal(id = 5, name = "Smoothie", minutes = 5, nIngredients = 4, nSteps = 20)
         )
 
         // When
         val result = useCase.getEasyPreparedMeals()
 
         //Then
-        assertThat(result).hasSize(2)
+        assertThat(result.map { it.id }).containsExactlyElementsIn(listOf(1, 2))
     }
 
     @Test
-    fun `getEasyPrepared should returns 1 item from list when meet easy criteria`() {
+    fun `getEasyPrepared should returns only items that meets easyMeal criteria`() {
         // Given
         every { repository.getAllMeals() } returns listOf(
             createMeal(id = 1, name = "Easy", minutes = 15, nIngredients = 2, nSteps = 3),
@@ -60,7 +61,7 @@ class GetEasyPreparedMealsUseCaseTest {
         val result = useCase.getEasyPreparedMeals()
 
         // Then
-        assertThat(result).hasSize(1)
+        assertThat(result.map { it.id }).containsExactly(1)
     }
 
 
@@ -102,7 +103,7 @@ class GetEasyPreparedMealsUseCaseTest {
         val result = useCase.getEasyPreparedMeals()
 
         // Then
-        assertThat(result).hasSize(10)
+        assertThat(result.toSet()).hasSize(10)
     }
 
 

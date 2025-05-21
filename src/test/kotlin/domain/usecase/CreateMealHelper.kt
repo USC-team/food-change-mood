@@ -74,3 +74,38 @@ fun createMeal(
     ingredients = null,
     contributorId = null,
 )
+fun createMeal(
+    id: Int,
+    name: String,
+    ingredients: List<String>
+) = Meal(
+    id = id,
+    name = name,
+    nutrition = null,
+    nSteps = null,
+    submitted = null,
+    tags = null,
+    minutes = null,
+    nIngredients = null,
+    steps = null,
+    description = null,
+    ingredients = ingredients,
+    contributorId = null
+)
+fun createMeal(
+    id: Int,
+    name: String
+) = Meal(
+    id = id,
+    name = name,
+    nutrition = null,
+    nSteps = null,
+    submitted = null,
+    tags = null,
+    minutes = null,
+    nIngredients = null,
+    steps = null,
+    description = null,
+    ingredients = null,
+    contributorId = null
+)
