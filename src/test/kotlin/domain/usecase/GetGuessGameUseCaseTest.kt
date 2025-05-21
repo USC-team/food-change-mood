@@ -11,12 +11,11 @@ import kotlin.test.Test
 
 
 class GetGuessGameUseCaseTest {
-    private lateinit var repository: MealsRepository
+    private val repository: MealsRepository = mockk(relaxed = true)
     private lateinit var useCase: GetGuessGameUseCase
 
     @BeforeEach
     fun setup() {
-        repository = mockk(relaxed = true)
         useCase = GetGuessGameUseCase(repository)
     }
     @Test
