@@ -2,9 +2,9 @@ package org.example.presentation
 
 import domain.model.Meal
 import domain.model.Nutrition
+import domain.usecase.GetEasyPreparedMealsUseCase
 import domain.usecase.GetKetoMealUseCase
 import org.example.domain.model.GuessResult
-import org.example.domain.usecase.GetEasyPreparedMealsUseCase
 import org.example.domain.usecase.GetGuessGameUseCase
 import org.example.domain.usecase.GetSweetsWithNoEggsUseCase
 
