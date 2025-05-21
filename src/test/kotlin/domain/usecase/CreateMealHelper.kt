@@ -34,6 +34,18 @@ fun createNutrition(
     totalFat = null,
     saturatedFat = null
 )
+fun createNutrition(
+    calories: Double?,
+    protein: Double?
+) = Nutrition(
+    carbohydrates = null,
+    protein = protein,
+    sugar = null,
+    sodium = null,
+    calories = calories,
+    totalFat = null,
+    saturatedFat = null
+)
 
 fun createMeal(
     id: Int,
