@@ -1,3 +1,3 @@
-package org.example.domain.usecase.model
+package domain.usecase.exceptions
 
 class MealNotFoundExceptions : Exception("No Meal Found")
