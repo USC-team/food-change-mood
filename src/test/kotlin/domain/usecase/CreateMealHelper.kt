@@ -38,9 +38,9 @@ fun createNutrition(
 fun createMeal(
     id: Int,
     name: String,
-    minutes: Int,
-    nIngredients: Int,
-    nSteps: Int
+    minutes: Int?,
+    nIngredients: Int?,
+    nSteps: Int?
 ) = Meal(
     id = id,
     name = name,

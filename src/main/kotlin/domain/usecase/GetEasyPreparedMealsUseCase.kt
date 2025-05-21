@@ -8,7 +8,7 @@ class GetEasyPreparedMealsUseCase(private val repo: MealsRepository) {
 
     fun getEasyPreparedMeals(): List<Meal> {
         return repo.getAllMeals().filter(::isEasyPrepared)
-            .takeRandom(TEN_RANDOM_MEALS)
+            .takeRandom()
             .toList()
     }
 
@@ -18,15 +18,15 @@ class GetEasyPreparedMealsUseCase(private val repo: MealsRepository) {
                 (meal.nSteps ?: Int.MAX_VALUE) <= REQUIRED_NSTEPS_FOR_EASY_PREPARE
     }
 
-    private fun List<Meal>.takeRandom(count: Int): List<Meal> {
-        if (isEmpty() || count <= 0) return emptyList()
+    private fun List<Meal>.takeRandom(): List<Meal> {
+        if (isEmpty()) return emptyList()
 
         val result = mutableSetOf<Meal>()
         val random = Random.Default
         var attempts = 0
-        val maxAttempts = count * 2
+        val maxAttempts = TEN_RANDOM_MEALS * 2
 
-        while (result.size < count && attempts < maxAttempts) {
+        while (result.size < TEN_RANDOM_MEALS && attempts < maxAttempts) {
             val randomMeal = this[random.nextInt(size)]
             if (result.add(randomMeal)) {
                 attempts = 0

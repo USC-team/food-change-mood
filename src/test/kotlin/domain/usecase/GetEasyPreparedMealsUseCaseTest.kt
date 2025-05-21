@@ -80,6 +80,20 @@ class GetEasyPreparedMealsUseCaseTest {
     }
 
     @Test
+    fun `getEasyPrepared should returns empty list when meals has low quality data`() {
+        // Given
+        every { repository.getAllMeals() } returns listOf(
+            createMeal(id = 1, name = "Complex Dish", minutes = null, nIngredients = null, nSteps = null)
+        )
+
+        //When
+        val result = useCase.getEasyPreparedMeals()
+
+        // Then
+        assertThat(result).isEmpty()
+    }
+
+    @Test
     fun `returns exactly ten distinct easy meals when more than ten available`() {
         // Given
         every { repository.getAllMeals() } returns listOf(
