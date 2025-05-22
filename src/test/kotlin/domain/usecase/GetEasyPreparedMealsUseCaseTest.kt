@@ -3,7 +3,7 @@ package domain.usecase
 import com.google.common.truth.Truth.assertThat
 import io.mockk.every
 import io.mockk.mockk
-import org.example.domain.repository.MealsRepository
+import domain.repository.MealsRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -16,7 +16,6 @@ class GetEasyPreparedMealsUseCaseTest {
     private val MAX_MINUTES = 30
     private val MAX_INGREDIENTS = 5
     private val MAX_STEPS = 6
-    private val TEN = 10
 
     @BeforeEach
     fun setup() {

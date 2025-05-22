@@ -1,7 +1,7 @@
 package domain.usecase
 
 import domain.model.Meal
-import org.example.domain.repository.MealsRepository
+import domain.repository.MealsRepository
 import kotlin.random.Random
 
 class GetEasyPreparedMealsUseCase(private val repo: MealsRepository) {

@@ -1,4 +1,4 @@
-package org.example.presentation
+package presentation
 
 object ConsoleColors {
     const val RED_COLOR= "\u001B[31m"

@@ -1,13 +1,14 @@
-package org.example.dependencyInjection
+package dependencyInjection
 
+
+import data.repository.MockDataMealRepository
+import domain.repository.MealsRepository
 import domain.usecase.GetEasyPreparedMealsUseCase
+import domain.usecase.GetGuessGameUseCase
 import domain.usecase.GetKetoMealUseCase
-import org.example.data.repository.MockDataMealRepository
-import org.example.domain.repository.MealsRepository
-import org.example.domain.usecase.GetGuessGameUseCase
-import org.example.domain.usecase.GetSweetsWithNoEggsUseCase
-import org.example.presentation.FoodChangeMoodConsole
+import domain.usecase.GetSweetsWithNoEggsUseCase
 import org.koin.dsl.module
+import presentation.FoodChangeMoodConsole
 import java.io.File
 
 val appModule = module {

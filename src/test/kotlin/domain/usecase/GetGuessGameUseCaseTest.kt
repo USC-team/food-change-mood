@@ -2,9 +2,8 @@ package domain.usecase
 import com.google.common.truth.Truth.assertThat
 import io.mockk.every
 import io.mockk.mockk
-import org.example.domain.model.GuessResult
-import org.example.domain.repository.MealsRepository
-import org.example.domain.usecase.GetGuessGameUseCase
+import domain.model.GuessResult
+import domain.repository.MealsRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test
