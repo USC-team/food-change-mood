@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm") version "2.1.20"
+    id("jacoco")
 }
 
 group = "org.example"
@@ -10,7 +11,7 @@ repositories {
 }
 
 dependencies {
-    testImplementation ("org.jetbrains.kotlin:kotlin-test")
+    testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("org.junit.jupiter:junit-jupiter:5.12.2")
     testImplementation("com.google.truth:truth:1.4.4")
     testImplementation("io.mockk:mockk:1.14.2")
@@ -25,4 +26,48 @@ tasks.test {
 }
 kotlin {
     jvmToolchain(21)
+}
+
+val includedPackages = listOf(
+    "**/data/**",
+    "**/domain/**",
+    "**/presentation/**"
+)
+
+val excludedPackages = listOf(
+    "**/dependencyInjection/**",
+    "**/domain/model/**",
+)
+
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+    }
+
+    classDirectories.setFrom(
+        fileTree(layout.buildDirectory.dir("classes/kotlin/main")) {
+            include(includedPackages)
+            exclude(excludedPackages)
+        }
+    )
+}
+
+tasks.jacocoTestCoverageVerification {
+    dependsOn(tasks.test)
+    violationRules {
+        rule {
+            limit {
+                minimum = "0.80".toBigDecimal()
+            }
+        }
+    }
+
+    classDirectories.setFrom(
+        fileTree(layout.buildDirectory.dir("classes/kotlin/main")) {
+            include(includedPackages)
+            exclude(excludedPackages)
+        }
+    )
 }

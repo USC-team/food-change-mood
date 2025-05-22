@@ -1,7 +1,7 @@
-package org.example.domain.usecase
+package domain.usecase
 import domain.model.Meal
-import org.example.domain.model.GuessResult
-import org.example.domain.repository.MealsRepository
+import domain.model.GuessResult
+import domain.repository.MealsRepository
 import domain.usecase.exceptions.MealNotFoundExceptions
 
 

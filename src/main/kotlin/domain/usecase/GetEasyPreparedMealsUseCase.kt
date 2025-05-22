@@ -1,7 +1,7 @@
 package domain.usecase
 
 import domain.model.Meal
-import org.example.domain.repository.MealsRepository
+import domain.repository.MealsRepository
 import kotlin.random.Random
 
 class GetEasyPreparedMealsUseCase(private val repo: MealsRepository) {
@@ -13,9 +13,9 @@ class GetEasyPreparedMealsUseCase(private val repo: MealsRepository) {
     }
 
     private fun isEasyPrepared(meal: Meal): Boolean {
-        return (meal.minutes ?: Int.MAX_VALUE) <= REQUIRED_MINUTES_FOR_EASY_PREPARE &&
-                (meal.nIngredients ?: Int.MAX_VALUE) <= REQUIRED_NINGREDIENTS_FOR_EASY_PREPARE &&
-                (meal.nSteps ?: Int.MAX_VALUE) <= REQUIRED_NSTEPS_FOR_EASY_PREPARE
+        return (meal.minutes ?: Int.MAX_VALUE) in 0..REQUIRED_MINUTES_FOR_EASY_PREPARE &&
+                (meal.nIngredients ?: Int.MAX_VALUE) in 0..REQUIRED_NINGREDIENTS_FOR_EASY_PREPARE &&
+                (meal.nSteps ?: Int.MAX_VALUE) in 0..REQUIRED_NSTEPS_FOR_EASY_PREPARE
     }
 
     private fun List<Meal>.takeRandom(): List<Meal> {
