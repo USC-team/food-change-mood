@@ -2,20 +2,22 @@ package org.example.presentation
 
 import domain.model.Meal
 import domain.model.Nutrition
+import domain.usecase.GetEasyPreparedMealsUseCase
 import domain.usecase.GetKetoMealUseCase
 import org.example.domain.model.GuessResult
-import org.example.domain.usecase.GetEasyPreparedMealsUseCase
 import org.example.domain.usecase.GetGuessGameUseCase
 import org.example.domain.usecase.GetHealthyMealsUseCase
-import org.example.domain.usecase.GetSpecialIraqMealsUseCae
+import org.example.domain.usecase.GetSpecialIraqMealsUseCase
 import org.example.domain.usecase.GetSweetsWithNoEggsUseCase
 
-class FoodChangeMoodConsole(private val getGuessGameUseCase: GetGuessGameUseCase,
-                            private val getSweetsWithNoEggsUseCase: GetSweetsWithNoEggsUseCase,
-                            private val getEasyPreparedMealsUseCase: GetEasyPreparedMealsUseCase,
-                            private val getKetoMealUseCase: GetKetoMealUseCase
-                            ,private val getSpecialIraqMealsUseCae: GetSpecialIraqMealsUseCae,
-                            private  val  getHealthyMealsUseCase: GetHealthyMealsUseCase) {
+class FoodChangeMoodConsole(
+    private val getGuessGameUseCase: GetGuessGameUseCase,
+    private val getSweetsWithNoEggsUseCase: GetSweetsWithNoEggsUseCase,
+    private val getEasyPreparedMealsUseCase: GetEasyPreparedMealsUseCase,
+    private val getKetoMealUseCase: GetKetoMealUseCase,
+    private val getSpecialIraqMealsUseCase: GetSpecialIraqMealsUseCase,
+    private val getHealthyMealsUseCase: GetHealthyMealsUseCase
+) {
 
     fun start() {
         greet()
@@ -26,112 +28,58 @@ class FoodChangeMoodConsole(private val getGuessGameUseCase: GetGuessGameUseCase
         showOptions()
         val userChoice = getUserChoice()
         when (userChoice) {
-            0 -> { sayGoodBye()
-                    return
-            }1 -> { explainFirstChoice()
-                    getHealthyAndFastMeals()
-            }3 -> { explainThirdChoice()
-                    getIraqMeals()
-            }4 -> { explainFourthChoice()
-                    easyPrepareMeals()
-            }5 -> { explainFifthChoice()
-                    guessGame()
-            }6 -> { explainSixthChoice()
-                    noEggsSweet()
-            }7 -> { explainSeventhChoice()
-                    ketoMeal()
-            }else -> {
-                println( "${ConsoleColors.RED_COLOR}Invalid Choice!${ConsoleColors.RESET_COLOR}\n" +
-                            "We'll support other features in the future!")
+            0 -> {
+                sayGoodBye()
+                return
+            }
+
+            1 -> {
+                explainFirstChoice()
+                getHealthyAndFastMeals()
+            }
+
+            3 -> {
+                explainThirdChoice()
+                getIraqMeals()
+            }
+
+            4 -> {
+                explainFourthChoice()
+                easyPrepareMeals()
+            }
+
+            5 -> {
+                explainFifthChoice()
+                guessGame()
+            }
+
+            6 -> {
+                explainSixthChoice()
+                noEggsSweet()
+            }
+
+            7 -> {
+                explainSeventhChoice()
+                ketoMeal()
+            }
+
+            else -> {
+                println(
+                    "${ConsoleColors.RED_COLOR}Invalid Choice!${ConsoleColors.RESET_COLOR}\n" +
+                            "We'll support other features in the future!"
+                )
             }
         }
         chooseOption()
     }
-    private fun easyPrepareMeals() {
-        getEasyPreparedMealsUseCase.getEasyPreparedMeals().forEach{
-            println("\tMeal Name: ${ConsoleColors.GREEN_COLOR} ${it.name} ${ConsoleColors.RESET_COLOR}")
-        }
 
-    }
-    private fun ketoMeal(){
-        val meal = getKetoMealUseCase.getKetoMeal()
-        println("Meal Name:${ConsoleColors.GREEN_COLOR}  ${meal.name} ${ConsoleColors.RESET_COLOR}")
-        askUserIfLikedMeal()
-        if(didYouLikeIt()) showMealsDetails(meal)
-        else ketoMeal()
-    }
-    private fun guessGame(){
-        val meal= getGuessGameUseCase.getRandomMeal()
-        println("Meal Name:${ConsoleColors.GREEN_COLOR}  ${meal.name} ${ConsoleColors.RESET_COLOR}")
-        if(! isCorrectGuess(meal = meal) ) {
-            println("${ConsoleColors.RED_COLOR} Failed!\n Correct answer is ${meal.minutes}${ConsoleColors.RESET_COLOR}")
-        }
-    }
-    private fun isCorrectGuess(tries: Int=3, meal: Meal): Boolean {
-        if (tries > 0) {
-            askUserToEnter("Guess Minutes")
-            val guessResult = getGuessGameUseCase.isGuessCorrectHighOrLow(meal, getUserChoice())
-            when (guessResult) {
-                GuessResult.Correct -> {
-                    println("${ConsoleColors.GREEN_COLOR}Excellent!${ConsoleColors.RESET_COLOR}")
-                    return true
-                }
-                GuessResult.TooHigh -> {
-                    println("You are Wrong! It's too high!")
-                    isCorrectGuess(tries - 1,meal)
-                }
-
-                GuessResult.TooLow -> {
-                    println("You are Wrong! It's too low!")
-                    isCorrectGuess(tries - 1, meal)
-                }
-            }
-        }
-        return false
-    }
-    private fun noEggsSweet(){
-        val meal = getSweetsWithNoEggsUseCase.getMealHasNoEggs()
-        println("Meal Name:${ConsoleColors.GREEN_COLOR}  ${meal.name} ${ConsoleColors.RESET_COLOR}")
-        askUserIfLikedMeal()
-        if(didYouLikeIt()) showMealsDetails(meal)
-        else noEggsSweet()
-    }
-    private fun didYouLikeIt():Boolean {
-        if(getUserInput().equals("y", ignoreCase = true))
-            return true
-        return false
-    }
-    private fun askUserIfLikedMeal() {
-    println("Do you like this meal? if you like it, we'll show you the details,\n" +
-            " if not, we'll suggest another one! (Y/N)")
-    }
-    private fun showMealsDetails(meal: Meal) {
-        println(
-                    "Name:               ${meal.name}\n" +
-                    "ID:                 ${meal.id}\n" +
-                    "Minutes:            ${meal.minutes}\n" +
-                    "Contributor ID:     ${meal.contributorId}\n" +
-                    "Submitted:          ${meal.submitted}\n" +
-                    "Tags:")
-        meal.tags?.forEach { println("\t $it") }
-        println(    "Nutrition:")
-        printNutrients(meal)
-        println(    "Number of Steps:    ${meal.nSteps}\n" +
-                    "Steps:")
-        meal.steps?.forEach { println("\t $it  ") }
-        println(    "Description:        ${meal.description}\n" +
-                    "Ingredients:")
-        meal.ingredients?.forEach { println("\t $it  ") }
-        println(
-                    "Ingredients Number: ${meal.nIngredients}\n"
-        )
-    }
-    private fun printNutrients(meal :Meal){
+    private fun printNutrients(meal: Meal) {
         meal.nutrition?.let { showNutrientsDetails(it) }
     }
+
     private fun showNutrientsDetails(nutrients: Nutrition) {
         println(
-                    "\tCalories:      ${nutrients.calories}\n" +
+            "\tCalories:      ${nutrients.calories}\n" +
                     "\tTotal Fat:     ${nutrients.totalFat}\n" +
                     "\tSugar:         ${nutrients.sugar}\n" +
                     "\tSodium:        ${nutrients.sodium}\n" +
@@ -147,34 +95,40 @@ class FoodChangeMoodConsole(private val getGuessGameUseCase: GetGuessGameUseCase
                     "***Welcome in USC Personal Finance Tracker***" +
                     ConsoleColors.RESET_COLOR
         )
-    private  fun getHealthyAndFastMeals (){
+    }
+
+    private fun getHealthyAndFastMeals() {
         println("\t Meal Name :${getHealthyMealsUseCase.getHealthyQuickMealsBelowAverage()}")
     }
 
-    private  fun getIraqMeals (){
-        println("\t Meal Name :${getSpecialIraqMealsUseCae.getSpecialIraqMeals()}")
+    private fun getIraqMeals() {
+        println("\t Meal Name :${getSpecialIraqMealsUseCase.getSpecialIraqMeals()}")
     }
+
     private fun easyPrepareMeals() {
-        getEasyPreparedMealsUseCase.getEasyPreparedMeals().forEach{
+        getEasyPreparedMealsUseCase.getEasyPreparedMeals().forEach {
             println("\tMeal Name: ${ConsoleColors.GREEN_COLOR} ${it.name} ${ConsoleColors.RESET_COLOR}")
         }
 
     }
-    private fun ketoMeal(){
+
+    private fun ketoMeal() {
         val meal = getKetoMealUseCase.getKetoMeal()
         println("Meal Name:${ConsoleColors.GREEN_COLOR}  ${meal.name} ${ConsoleColors.RESET_COLOR}")
         askUserIfLikedMeal()
-        if(didYouLikeIt()) showMealsDetails(meal)
+        if (didYouLikeIt()) showMealsDetails(meal)
         else ketoMeal()
     }
-    private fun guessGame(){
-        val meal= getGuessGameUseCase.getRandomMeal()
+
+    private fun guessGame() {
+        val meal = getGuessGameUseCase.getRandomMeal()
         println("Meal Name:${ConsoleColors.GREEN_COLOR}  ${meal.name} ${ConsoleColors.RESET_COLOR}")
-        if(! isCorrectGuess(meal = meal) ) {
+        if (!isCorrectGuess(meal = meal)) {
             println("${ConsoleColors.RED_COLOR} Failed!\n Correct answer is ${meal.minutes}${ConsoleColors.RESET_COLOR}")
         }
     }
-    private fun isCorrectGuess(tries: Int=3, meal: Meal): Boolean {
+
+    private fun isCorrectGuess(tries: Int = 3, meal: Meal): Boolean {
         if (tries > 0) {
             askUserToEnter("Guess Minutes")
             val guessResult = getGuessGameUseCase.isGuessCorrectHighOrLow(meal, getUserChoice())
@@ -183,9 +137,10 @@ class FoodChangeMoodConsole(private val getGuessGameUseCase: GetGuessGameUseCase
                     println("${ConsoleColors.GREEN_COLOR}Excellent!${ConsoleColors.RESET_COLOR}")
                     return true
                 }
+
                 GuessResult.TooHigh -> {
                     println("You are Wrong! It's too high!")
-                    isCorrectGuess(tries - 1,meal)
+                    isCorrectGuess(tries - 1, meal)
                 }
 
                 GuessResult.TooLow -> {
@@ -196,63 +151,52 @@ class FoodChangeMoodConsole(private val getGuessGameUseCase: GetGuessGameUseCase
         }
         return false
     }
-    private fun noEggsSweet(){
+
+    private fun noEggsSweet() {
         val meal = getSweetsWithNoEggsUseCase.getMealHasNoEggs()
         println("Meal Name:${ConsoleColors.GREEN_COLOR}  ${meal.name} ${ConsoleColors.RESET_COLOR}")
         askUserIfLikedMeal()
-        if(didYouLikeIt()) showMealsDetails(meal)
+        if (didYouLikeIt()) showMealsDetails(meal)
         else noEggsSweet()
     }
-    private fun didYouLikeIt():Boolean {
-        if(getUserInput().equals("y", ignoreCase = true))
+
+    private fun didYouLikeIt(): Boolean {
+        if (getUserInput().equals("y", ignoreCase = true))
             return true
         return false
     }
+
     private fun askUserIfLikedMeal() {
-    println("Do you like this meal? if you like it, we'll show you the details,\n" +
-            " if not, we'll suggest another one! (Y/N)")
+        println(
+            "Do you like this meal? if you like it, we'll show you the details,\n" +
+                    " if not, we'll suggest another one! (Y/N)"
+        )
     }
+
     private fun showMealsDetails(meal: Meal) {
         println(
-                    "Name:               ${meal.name}\n" +
+            "Name:               ${meal.name}\n" +
                     "ID:                 ${meal.id}\n" +
                     "Minutes:            ${meal.minutes}\n" +
                     "Contributor ID:     ${meal.contributorId}\n" +
                     "Submitted:          ${meal.submitted}\n" +
-                    "Tags:")
+                    "Tags:"
+        )
         meal.tags?.forEach { println("\t $it") }
-        println(    "Nutrition:")
+        println("Nutrition:")
         printNutrients(meal)
-        println(    "Number of Steps:    ${meal.nSteps}\n" +
-                    "Steps:")
+        println(
+            "Number of Steps:    ${meal.nSteps}\n" +
+                    "Steps:"
+        )
         meal.steps?.forEach { println("\t $it  ") }
-        println(    "Description:        ${meal.description}\n" +
-                    "Ingredients:")
+        println(
+            "Description:        ${meal.description}\n" +
+                    "Ingredients:"
+        )
         meal.ingredients?.forEach { println("\t $it  ") }
         println(
-                    "Ingredients Number: ${meal.nIngredients}\n"
-        )
-    }
-    private fun printNutrients(meal :Meal){
-        meal.nutrition?.let { showNutrientsDetails(it) }
-    }
-    private fun showNutrientsDetails(nutrients: Nutrition) {
-        println(
-                    "\tCalories:      ${nutrients.calories}\n" +
-                    "\tTotal Fat:     ${nutrients.totalFat}\n" +
-                    "\tSugar:         ${nutrients.sugar}\n" +
-                    "\tSodium:        ${nutrients.sodium}\n" +
-                    "\tProtein:       ${nutrients.protein}\n" +
-                    "\tSaturated Fat: ${nutrients.saturatedFat}\n" +
-                    "\tCarbohydrates: ${nutrients.carbohydrates}"
-        )
-    }
-
-    private fun greet() {
-        println(
-            ConsoleColors.MAGENTA_COLOR +
-                    "***Welcome in USC Personal Finance Tracker***" +
-                    ConsoleColors.RESET_COLOR
+            "Ingredients Number: ${meal.nIngredients}\n"
         )
     }
 
@@ -305,6 +249,7 @@ class FoodChangeMoodConsole(private val getGuessGameUseCase: GetGuessGameUseCase
                     "you can either like it (to view full details) or dislike it (to get another Keto meal)."
         )
     }
+
     private fun showOptions() {
         println(
             "you can choose one of the following:" +
@@ -315,9 +260,9 @@ class FoodChangeMoodConsole(private val getGuessGameUseCase: GetGuessGameUseCase
                     "5-  Guess Game.\n" +
                     "6-  Sweets with No Eggs.\n" +
                     "7-  Keto Diet Meal Helper." +
-                   // "8-  Search Foods by Add Date." +
-                   // "9-  Gym Helper.\n" +
-                   // "10- Explore Other Countries' Food Culture.\n" +
+                    // "8-  Search Foods by Add Date." +
+                    // "9-  Gym Helper.\n" +
+                    // "10- Explore Other Countries' Food Culture.\n" +
                     //"11- Ingredient Game.\n" +
                     //"12- I Love Potato.\n" +
                     //"13- So Thin Problem.\n" +

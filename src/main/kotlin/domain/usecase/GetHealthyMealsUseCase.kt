@@ -8,22 +8,23 @@ import org.example.domain.repository.MealsRepository
 class GetHealthyMealsUseCase(private val repo: MealsRepository) {
 
 
-   fun getHealthyQuickMealsBelowAverage(): List<Meal> =
+    fun getHealthyQuickMealsBelowAverage(): List<Meal> =
         repo.getAllMeals().let { meals ->
-        val (avgTotalFat, avgSaturatedFat, avgCarbohydrates) = meals.averageNutritionValues()
-        meals.filter {
-            getMealsLowFatAndMinute(
-                meal = it,
-                avgSaturatedFat = avgSaturatedFat,
-                avgTotalFat = avgTotalFat,
-                avgCarbohydrates = avgCarbohydrates
-            )
+            val (avgTotalFat, avgSaturatedFat, avgCarbohydrates) = meals.averageNutritionValues()
+            meals.filter {
+                getMealsLowFatAndMinute(
+                    meal = it,
+                    avgSaturatedFat = avgSaturatedFat,
+                    avgTotalFat = avgTotalFat,
+                    avgCarbohydrates = avgCarbohydrates
+                )
+            }
         }
-    }
 
 
     private fun List<Meal>.averageNutrition(selector: (Nutrition) -> Double?): Double =
         this.mapNotNull { it.nutrition?.let(selector) }.average()
+
 
     private fun List<Meal>.averageNutritionValues(): Triple<Double, Double, Double> {
         val avgTotalFat = averageNutrition { it.totalFat }
@@ -34,9 +35,12 @@ class GetHealthyMealsUseCase(private val repo: MealsRepository) {
 
 
     private fun getMealsLowFatAndMinute(
-        meal: Meal, avgTotalFat: Double, avgCarbohydrates: Double, avgSaturatedFat: Double
+        meal: Meal,
+        avgTotalFat: Double,
+        avgCarbohydrates: Double,
+        avgSaturatedFat: Double
     ): Boolean {
-        return meal.minutes?.let { it < minute } == true && meal.nutrition?.let { nutrition ->
+        return meal.minutes?.let { it < MINUTE } == true && meal.nutrition?.let { nutrition ->
             listOfNotNull(
                 nutrition.totalFat?.let { it < avgTotalFat },
                 nutrition.saturatedFat?.let { it < avgSaturatedFat },
@@ -45,7 +49,7 @@ class GetHealthyMealsUseCase(private val repo: MealsRepository) {
     }
 
     companion object {
-       const val minute = 15
+       private const val MINUTE = 15
     }
 
 }

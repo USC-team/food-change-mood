@@ -6,7 +6,7 @@ import domain.model.Nutrition
 fun createMeal(
     id: Int,
     name: String,
-    nutrition: Nutrition
+    nutrition: Nutrition,
 ) = Meal(
     id = id,
     name = name,
@@ -21,7 +21,6 @@ fun createMeal(
     ingredients = null,
     contributorId = null
 )
-
 fun createNutrition(
     carbohydrates: Double,
     protein: Double
@@ -34,7 +33,6 @@ fun createNutrition(
     totalFat = null,
     saturatedFat = null
 )
-
 fun createMeal(
     id: Int,
     name: String,
@@ -108,4 +106,59 @@ fun createMeal(
     description = null,
     ingredients = null,
     contributorId = null
+)
+
+fun createMeal(
+    id: Int,
+    name: String,
+    tags: List<String>?,
+    description: String?
+) = Meal(
+    id = id,
+    name = name,
+    nutrition = null,
+    nSteps = null,
+    submitted = null,
+    tags = tags,
+    minutes = null,
+    nIngredients = null,
+    steps = null,
+    description = description,
+    ingredients = null,
+    contributorId = null
+)
+
+fun createMeal(
+    id: Int,
+    name: String,
+    minutes: Int?,
+    nutrition: Nutrition?
+) = Meal(
+    id = id,
+    name = name,
+    nutrition = nutrition,
+    nSteps = null,
+    submitted = null,
+    tags = null,
+    minutes = minutes,
+    nIngredients = null,
+    steps = null,
+    description = null,
+    ingredients = null,
+    contributorId = null
+)
+
+fun createNutrition(
+    saturatedFat: Double?,
+    totalFat: Double?,
+    carbohydrates: Double?,
+) = Nutrition(
+    carbohydrates = carbohydrates,
+    protein = null,
+    sugar = null,
+    sodium = null,
+    calories = null,
+    totalFat = totalFat,
+    saturatedFat = saturatedFat
+
 )
