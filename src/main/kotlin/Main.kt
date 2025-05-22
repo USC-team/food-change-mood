@@ -6,7 +6,7 @@ import org.koin.java.KoinJavaComponent.getKoin
 
 fun main() {
     startKoin {
-    modules(appModule)
+        modules(appModule)
     }
 
     val programConsole: FoodChangeMoodConsole = getKoin().get()
