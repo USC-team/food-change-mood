@@ -1,3 +1,4 @@
+package org.example
 import presentation.FoodChangeMoodConsole
 import dependencyInjection.appModule
 import org.koin.core.context.startKoin

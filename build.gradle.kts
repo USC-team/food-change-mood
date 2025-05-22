@@ -30,20 +30,13 @@ kotlin {
 
 val includedPackages = listOf(
     "**/data/**",
-    "**/logic/**",
+    "**/domain/**",
     "**/presentation/**"
 )
 
 val excludedPackages = listOf(
-    "**/di/**",
-    "**/data/utils/**",
-    "**/data/**/**/mongo/**",
-    "**/data/**/model/**",
-    "**/logic/model/**",
-    "**/logic/exceptions/**",
-    "**/presentation/io/**",
-    "**/presentation/UIFeature*",
-    "**/presentation/utils/**",
+    "**/dependencyInjection/**",
+    "**/domain/model/**",
 )
 
 tasks.jacocoTestReport {

@@ -4,6 +4,7 @@ import io.mockk.every
 import io.mockk.mockk
 import domain.model.GuessResult
 import domain.repository.MealsRepository
+import domain.usecase.GetGuessGameUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test
