@@ -6,7 +6,7 @@ import domain.model.Meal
 import domain.repository.MealsRepository
 import java.io.File
 
-class MockDataMealRepository(private val csvFile: File) : MealsRepository {
+class CsvDataRepository(private val csvFile: File) : MealsRepository {
     private val reader = csvReader {
         delimiter = ','
         quoteChar = '"'
