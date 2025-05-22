@@ -12,9 +12,44 @@ class GetEasyPreparedMealsUseCaseTest {
     private var repository: MealsRepository = mockk(relaxed = true)
     private lateinit var useCase: GetEasyPreparedMealsUseCase
 
+    // these literals mirror your companion‐object constants:
+    private val MAX_MINUTES = 30
+    private val MAX_INGREDIENTS = 5
+    private val MAX_STEPS = 6
+
     @BeforeEach
     fun setup() {
         useCase = GetEasyPreparedMealsUseCase(repository)
+    }
+
+    @Test
+    fun `getEasyPrepared should exclude when minutes bigger than threshold`() {
+        // Given
+        every { repository.getAllMeals() } returns listOf(
+            createMeal(1, "namee", minutes = MAX_MINUTES + 1, nIngredients = 1, nSteps = 1)
+        )
+        // When && Then
+        assertThat(useCase.getEasyPreparedMeals()).isEmpty()
+    }
+
+    @Test
+    fun `getEasyPrepared should exclude when ingredients bigger than threshold`() {
+        // Given
+        every { repository.getAllMeals() } returns listOf(
+            createMeal(2, "nameee", minutes = 1, nIngredients = MAX_INGREDIENTS + 1, nSteps = 1),
+        )
+        // When && Then
+        assertThat(useCase.getEasyPreparedMeals()).isEmpty()
+    }
+
+    @Test
+    fun `getEasyPrepared should exclude when steps bigger than threshold`() {
+        // Given
+        every { repository.getAllMeals() } returns listOf(
+            createMeal(3, "thstt", minutes = 1, nIngredients = 1, nSteps = MAX_STEPS + 1)
+        )
+        // When && Then
+        assertThat(useCase.getEasyPreparedMeals()).isEmpty()
     }
 
     @Test
@@ -120,5 +155,55 @@ class GetEasyPreparedMealsUseCaseTest {
         assertThat(result.toSet()).hasSize(10)
     }
 
+    @Test
+    fun `getEasyPrepared should returns exactly the easy prepared meal when meets easy criteria`() {
+        // Given
+        every { repository.getAllMeals() } returns listOf(
+            createMeal(
+                id = 42,
+                name = "JustOnTime",
+                minutes = 30,
+                nIngredients = 5,
+                nSteps = 6
+            )
+        )
 
+        // When
+        val result = useCase.getEasyPreparedMeals()
+
+        // Then
+        assertThat(result.map { it.id }).containsExactly(42)
+    }
+
+    @Test
+    fun `getEasyPrepared should excludes meals with negative or nonsensical data below zero`() {
+        // Given
+        every { repository.getAllMeals() } returns listOf(
+            createMeal(id = 7, "testmeal", minutes = 0, nIngredients = 0, nSteps = 0),
+            createMeal(id = 8, "testmeal2", minutes = -5, nIngredients = -1, nSteps = -99)
+        )
+
+        // When
+        val result = useCase.getEasyPreparedMeals()
+
+        // Then
+        assertThat(result.map { it.id }).containsExactly(7)
+    }
+
+    @Test
+    fun `getEasyPrepared should excludes meal when any one field is null`() {
+        // Given
+        every { repository.getAllMeals() } returns listOf(
+            createMeal(id = 101, "testmeal1", minutes = null, nIngredients = 3, nSteps = 2),
+            createMeal(id = 102, "testmeal2", minutes = 10, nIngredients = null, nSteps = 2),
+            createMeal(id = 103, "testmeal3", minutes = 10, nIngredients = 3, nSteps = null),
+            createMeal(id = 104, "testmeal4", minutes = 10, nIngredients = 3, nSteps = 2)
+        )
+
+        // When
+        val result = useCase.getEasyPreparedMeals()
+
+        // Then
+        assertThat(result.map { it.id }).containsExactly(104)
+    }
 }

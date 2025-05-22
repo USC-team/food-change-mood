@@ -6,7 +6,7 @@ import domain.model.Nutrition
 fun createMeal(
     id: Int,
     name: String,
-    nutrition: Nutrition
+    nutrition: Nutrition?
 ) = Meal(
     id = id,
     name = name,
@@ -23,8 +23,8 @@ fun createMeal(
 )
 
 fun createNutrition(
-    carbohydrates: Double,
-    protein: Double
+    carbohydrates: Double?,
+    protein: Double?
 ) = Nutrition(
     carbohydrates = carbohydrates,
     protein = protein,

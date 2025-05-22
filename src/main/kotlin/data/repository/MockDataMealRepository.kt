@@ -9,9 +9,9 @@ import java.io.File
 class MockDataMealRepository(private val csvFile: File) : MealsRepository {
     private val reader = csvReader {
         delimiter = ','
-        quoteChar = '"'              // respect quoted fields
-        skipEmptyLine = true             // drops totally blank lines
-        skipMissMatchedRow = true            // drops any row with wrong # of columns
+        quoteChar = '"'
+        skipEmptyLine = true
+        skipMissMatchedRow = true
     }
 
     override fun getAllMeals(): List<Meal> {
