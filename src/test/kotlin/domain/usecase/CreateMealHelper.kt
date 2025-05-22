@@ -35,6 +35,7 @@ fun createNutrition(
     saturatedFat = null
 )
 fun createNutrition(
+    type:String="calories,protein",
     calories: Double?,
     protein: Double?
 ) = Nutrition(
