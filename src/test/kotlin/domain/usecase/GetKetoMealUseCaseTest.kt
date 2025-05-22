@@ -4,7 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import domain.usecase.exceptions.MealNotFoundExceptions
 import io.mockk.every
 import io.mockk.mockk
-import org.example.domain.repository.MealsRepository
+import domain.repository.MealsRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows

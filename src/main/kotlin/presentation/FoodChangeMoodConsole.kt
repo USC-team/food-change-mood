@@ -1,12 +1,12 @@
-package org.example.presentation
+package presentation
 
 import domain.model.Meal
 import domain.model.Nutrition
 import domain.usecase.GetEasyPreparedMealsUseCase
 import domain.usecase.GetKetoMealUseCase
-import org.example.domain.model.GuessResult
-import org.example.domain.usecase.GetGuessGameUseCase
-import org.example.domain.usecase.GetSweetsWithNoEggsUseCase
+import domain.model.GuessResult
+import domain.usecase.GetGuessGameUseCase
+import domain.usecase.GetSweetsWithNoEggsUseCase
 
 class FoodChangeMoodConsole(private val getGuessGameUseCase: GetGuessGameUseCase,
                             private val getSweetsWithNoEggsUseCase: GetSweetsWithNoEggsUseCase,

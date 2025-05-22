@@ -1,4 +1,4 @@
-package org.example.presentation
+package presentation
 
 class UncompletedTasks {
     private fun explainSecondChoice() {

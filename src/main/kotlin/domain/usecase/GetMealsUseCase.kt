@@ -1,6 +1,6 @@
-package org.example.domain.usecase
+package domain.usecase
 
-import org.example.domain.repository.MealsRepository
+import domain.repository.MealsRepository
 
 class GetMealsUseCase(private val repo: MealsRepository) {
 
