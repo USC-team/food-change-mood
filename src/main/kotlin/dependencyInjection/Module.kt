@@ -17,7 +17,6 @@ import org.example.presentation.console_io.MessagesPrinter
 import org.example.presentation.console_io.ReadManager
 import presentation.FoodChangeMoodConsole
 import org.koin.dsl.module
-import presentation.FoodChangeMoodConsole
 import java.io.File
 
 val appModule = module {
