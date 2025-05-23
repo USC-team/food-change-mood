@@ -4,9 +4,9 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import io.mockk.verifySequence
-import org.example.presentation.choices.ChoicesManager
-import org.example.presentation.console_io.MessagePrinter
-import org.example.presentation.console_io.ConsoleReadManager
+import presentation.choices.ChoicesManager
+import presentation.console_io.MessagePrinter
+import presentation.console_io.ConsoleReadManager
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 

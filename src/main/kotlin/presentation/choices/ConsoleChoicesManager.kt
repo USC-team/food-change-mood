@@ -1,4 +1,4 @@
-package org.example.presentation.choices
+package presentation.choices
 
 import domain.model.GuessResult
 import domain.model.Meal
@@ -8,8 +8,8 @@ import domain.usecase.GetKetoMealUseCase
 import domain.usecase.GetSweetsWithNoEggsUseCase
 import domain.usecase.exceptions.InvalidChoiceException
 import domain.usecase.exceptions.MealNotFoundExceptions
-import org.example.presentation.console_io.MessagePrinter
-import org.example.presentation.console_io.ReadManager
+import presentation.console_io.MessagePrinter
+import presentation.console_io.ReadManager
 
 class ConsoleChoicesManager(private val getGuessGameUseCase: GetGuessGameUseCase,
                             private val getSweetsWithNoEggsUseCase: GetSweetsWithNoEggsUseCase,

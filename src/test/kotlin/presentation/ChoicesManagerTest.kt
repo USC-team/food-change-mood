@@ -13,9 +13,9 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import io.mockk.verifySequence
-import org.example.presentation.choices.ConsoleChoicesManager
-import org.example.presentation.console_io.MessagePrinter
-import org.example.presentation.console_io.ReadManager
+import presentation.choices.ConsoleChoicesManager
+import presentation.console_io.MessagePrinter
+import presentation.console_io.ReadManager
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test

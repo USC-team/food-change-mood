@@ -1,4 +1,4 @@
-package org.example.presentation.console_io
+package presentation.console_io
 
 interface ReadManager {
     fun readLine(): String

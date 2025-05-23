@@ -1,4 +1,4 @@
-package org.example.domain.usecase
+package domain.usecase
 
 import domain.model.Meal
 import domain.repository.MealsRepository
