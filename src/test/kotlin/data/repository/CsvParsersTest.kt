@@ -1,44 +1,49 @@
 package data.repository
 
-import org.junit.jupiter.api.Assertions.*
+import data.repository.CsvColumns.CONTRIBUTOR
+import data.repository.CsvColumns.INGREDIENTS
+import data.repository.CsvColumns.N_INGREDIENTS
+import data.repository.CsvColumns.N_STEPS
+import data.repository.CsvColumns.STEPS
+import data.repository.CsvColumns.TAGS
+import data.repository.CsvParserFixtures.mealRow
+import domain.model.Meal
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class CsvParsersTest {
 
-    // Given
-    private fun baseRow() = mutableMapOf(
-        CsvParsers.ID            to "42",
-        CsvParsers.NAME          to "TestMeal",
-        CsvParsers.MINUTES       to "15",
-        CsvParsers.CONTRIBUTOR   to "7",
-        CsvParsers.SUBMITTED     to "2025-01-01",
-        CsvParsers.TAGS          to "",
-        CsvParsers.NUTRITION     to "",
-        CsvParsers.N_STEPS       to "3",
-        CsvParsers.STEPS         to "",
-        CsvParsers.DESCRIPTION   to "desc",
-        CsvParsers.INGREDIENTS   to "",
-        CsvParsers.N_INGREDIENTS to "2"
-    )
+    private lateinit var base: MutableMap<String, String>
+    private lateinit var meal: Meal
+
+    @BeforeEach
+    fun setup() {
+        // Given
+        base = mealRow()
+        meal = CsvParsers.parseToMeal(base)
+    }
 
     @Test
-    fun `parseToMeal with minimal empty lists`() {
-        // When
-        val meal = CsvParsers.parseToMeal(baseRow())
-
+    fun `should return meal with empty lists when all list-fields are blank`() {
         // Then
-        assertEquals(42,           meal.id)
-        assertEquals("TestMeal",   meal.name)
-        assertEquals(15,           meal.minutes)
-        assertEquals(7,            meal.contributorId)
-        assertEquals("2025-01-01", meal.submitted)
-        assertEquals(3,            meal.nSteps)
-        assertEquals(2,            meal.nIngredients)
+        assertEquals(42, meal.id)
 
-        assertEquals(emptyList<String>(), meal.tags)
-        assertEquals(emptyList<String>(), meal.steps)
+    }
+
+    @Test
+    fun `should return empty ingredients when none provided`() {
         assertEquals(emptyList<String>(), meal.ingredients)
+    }
 
+    @Test
+    fun `should return correct submitted date`() {
+        assertEquals("2025-01-01", meal.submitted)
+    }
+
+    @Test
+    fun `should have null nutrition fields when nutrition blank`() {
         with(meal.nutrition) {
             assertNull(this?.calories)
             assertNull(this?.totalFat)
@@ -51,20 +56,63 @@ class CsvParsersTest {
     }
 
     @Test
-    fun `parseToMeal with comma-separated and bracketed tokens`() {
+    fun `should return null contributorId when contributor missing or blank`() {
         // Given
-        val row = baseRow().apply {
-            this[CsvParsers.TAGS]        = "a,b,c"
-            this[CsvParsers.STEPS]       = "['s1','s2','s3']"
-            this[CsvParsers.INGREDIENTS] = "x,y"
-        }
+        base[CONTRIBUTOR] = ""
         // When
-        val meal = CsvParsers.parseToMeal(row)
-
+        val meal = CsvParsers.parseToMeal(base)
         // Then
-        assertEquals(listOf("a","b","c"),       meal.tags)
-        assertEquals(listOf("s1","s2","s3"),   meal.steps)
-        assertEquals(listOf("x","y"),          meal.ingredients)
+        assertNull(meal.contributorId)
+    }
+
+    @Test
+    fun `should return null nSteps when steps count missing or blank`() {
+        // Given
+        base[N_STEPS] = ""
+        // When
+        val meal = CsvParsers.parseToMeal(base)
+        // Then
+        assertNull(meal.nSteps)
+    }
+
+    @Test
+    fun `should return null nIngredients when ingredients count missing or blank`() {
+        // Given
+        base[N_INGREDIENTS] = ""
+        // When
+        val meal = CsvParsers.parseToMeal(base)
+        // Then
+        assertNull(meal.nIngredients)
+    }
+
+    @Test
+    fun `should parse tags correctly when provided`() {
+        // Given
+        val row = mealRow().apply { this[TAGS] = "a,b,c" }
+        // When
+        val updatedMeal = CsvParsers.parseToMeal(row)
+        // Then
+        assertEquals(listOf("a", "b", "c"), updatedMeal.tags)
+    }
+
+    @Test
+    fun `should parse steps correctly when provided`() {
+        // Given
+        val row = mealRow().apply { this[STEPS] = "['s1','s2']" }
+        // When
+        val updatedMeal = CsvParsers.parseToMeal(row)
+        // Then
+        assertEquals(listOf("s1", "s2"), updatedMeal.steps)
+    }
+
+    @Test
+    fun `should parse ingredients correctly when provided`() {
+        // Given
+        val row = mealRow().apply { this[INGREDIENTS] = "x,y" }
+        // When
+        val updatedMeal = CsvParsers.parseToMeal(row)
+        // Then
+        assertEquals(listOf("x", "y"), updatedMeal.ingredients)
     }
 
 }
