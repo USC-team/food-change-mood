@@ -2,7 +2,7 @@ package org.example.presentation.console_io
 
 import domain.model.Meal
 
-interface IMessagePrinter {
+interface MessagePrinter {
     fun sayGoodBye()
     fun explainChoice(choice:Int)
     fun printMealName(meal: Meal)

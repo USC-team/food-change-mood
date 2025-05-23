@@ -2,9 +2,8 @@ package org.example.presentation.console_io
 
 import domain.model.Meal
 import domain.model.Nutrition
-import org.example.presentation.console_io.ConsoleColors
 
-object MessagesPrinter: IMessagePrinter {
+object ConsoleMessagesPrinter: MessagePrinter {
 
     override fun sayGoodBye() {
         println(

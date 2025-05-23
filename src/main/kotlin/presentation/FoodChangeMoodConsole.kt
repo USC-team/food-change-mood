@@ -1,23 +1,23 @@
 package presentation
 
-import org.example.presentation.choices.IChoicesManager
-import org.example.presentation.console_io.IMessagePrinter
-import org.example.presentation.console_io.IReadManager
+import org.example.presentation.choices.ChoicesManager
+import org.example.presentation.console_io.MessagePrinter
+import org.example.presentation.console_io.ReadManager
 
-class FoodChangeMoodConsole(private val iChoicesManager: IChoicesManager,
-                            private val iMessagePrinter: IMessagePrinter,
-                            private val iReadManager: IReadManager){
+class FoodChangeMoodConsole(private val choicesManager: ChoicesManager,
+                            private val messagePrinter: MessagePrinter,
+                            private val readManager: ReadManager){
 
     fun start() {
-        iMessagePrinter.greet()
+        messagePrinter.greet()
         chooseOption()
     }
 
     fun chooseOption() {
-        iMessagePrinter.showOptions()
-        iMessagePrinter.askUserToEnter("Choice")
-        val input= iReadManager.myReadInt()
-        iChoicesManager.chooseOption(input)
+        messagePrinter.showOptions()
+        messagePrinter.askUserToEnter("Choice")
+        val input= readManager.readInt()
+        choicesManager.chooseOption(input)
         if (input!=0) chooseOption()
     }
 }
