@@ -40,16 +40,19 @@ class GetHealthyMealsUseCase(private val repo: MealsRepository) {
         avgCarbohydrates: Double,
         avgSaturatedFat: Double
     ): Boolean {
-        return meal.minutes?.let { it < MINUTE } == true && meal.nutrition?.let { nutrition ->
-            listOfNotNull(
-                nutrition.totalFat?.let { it < avgTotalFat },
-                nutrition.saturatedFat?.let { it < avgSaturatedFat },
-                nutrition.carbohydrates?.let { it < avgCarbohydrates }).all { it }
-        } == true
+        val nutrition = meal.nutrition
+        val isPreparationTimeValid = meal.minutes != null && meal.minutes in 1..MINUTE
+        val isNutritionBelowAverage = nutrition?.totalFat != null &&
+                nutrition.saturatedFat != null &&
+                nutrition.carbohydrates != null &&
+                nutrition.totalFat < avgTotalFat &&
+                nutrition.saturatedFat < avgSaturatedFat &&
+                nutrition.carbohydrates < avgCarbohydrates
+        return isPreparationTimeValid && isNutritionBelowAverage
     }
 
     companion object {
-       private const val MINUTE = 15
+        private const val MINUTE = 15
     }
 
 }

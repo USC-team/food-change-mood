@@ -9,15 +9,16 @@ import org.junit.jupiter.api.BeforeEach
 import kotlin.test.Test
 
 class GetHealthyMealsUseCaseTest {
-    private val repository : MealsRepository = mockk(relaxed = true)
-    private lateinit var healthyMealsUseCase : GetHealthyMealsUseCase
+    private val repository: MealsRepository = mockk(relaxed = true)
+    private lateinit var healthyMealsUseCase: GetHealthyMealsUseCase
 
     @BeforeEach
-     fun setup(){
+    fun setup() {
         healthyMealsUseCase = GetHealthyMealsUseCase(repository)
     }
+
     @Test
-    fun `getHealthyQuickMealsBelowAverage should return empty list when meals empty`(){
+    fun `getHealthyQuickMealsBelowAverage should return empty list when meals empty`() {
         //Given
         every { repository.getAllMeals() } returns emptyList()
         //when
@@ -27,244 +28,190 @@ class GetHealthyMealsUseCaseTest {
 
     }
 
+    @Test
+    fun `getHealthyQuickMealsBelowAverage should return only meals with less than 15 min list when get list of meals`() {
+        //Given
+        val nutritions = createNutrition(totalFat = 20.0, saturatedFat = 20.0, carbohydrates = 20.0)
+        every { repository.getAllMeals() } returns listOf(
+            createMeal(id = 1, minutes = 1, nutrition = nutritions),
+            createMeal(id = 2, minutes = 10, nutrition = nutritions),
+            createMeal(id = 3, minutes = 15, nutrition = nutritions),
+            createMeal(id = 4, minutes = 17, nutrition = nutritions),
+            createMeal(
+                id = 5, minutes = 20,
+                nutrition = createNutrition(totalFat = 80.0, saturatedFat = 80.0, carbohydrates = 80.0)
+            ),
+        )
+        //when
+        val result = healthyMealsUseCase.getHealthyQuickMealsBelowAverage()
+        val resultIds = result.map { it.id }
+        //Then
+        assertThat(resultIds).isEqualTo(listOf(1, 2, 3))
+    }
 
     @Test
-    fun `getHealthyQuickMealsBelowAverage should return empty list when meals take more than 15 min and nutrition null`(){
+    fun `getHealthyQuickMealsBelowAverage should return empty list when meals take less than zero min`() {
         //Given
         every { repository.getAllMeals() } returns listOf(
             createMeal(
-                id = 1,
-                name = "pasta",
-                minutes = OVER_MINUTE,
+                id = 1, minutes = 0,
+                nutrition = createNutrition(totalFat = 80.0, saturatedFat = 80.0, carbohydrates = 80.0)
+            ),
+            createMeal(
+                id = 2, minutes = 0,
+                nutrition = createNutrition(totalFat = 20.0, saturatedFat = 20.0, carbohydrates = 20.0)
+            ),
+            createMeal(
+                id = 2, minutes = -1,
+                nutrition = createNutrition(totalFat = 20.0, saturatedFat = 20.0, carbohydrates = 20.0)
+            ),
+            createMeal(
+                id = 2, minutes = -20,
+                nutrition = createNutrition(totalFat = 20.0, saturatedFat = 20.0, carbohydrates = 20.0)
+            ),
+        )
+        //when
+        val result = healthyMealsUseCase.getHealthyQuickMealsBelowAverage()
+        //Then
+        assertThat(result).isEmpty()
+    }
+
+    @Test
+    fun `getHealthyQuickMealsBelowAverage should return empty list when meals take null minutes`() {
+        //Given
+        every { repository.getAllMeals() } returns listOf(
+            createMeal(
+                id = 1, minutes = null,
+                nutrition = createNutrition(totalFat = 80.0, saturatedFat = 80.0, carbohydrates = 80.0)
+            ),
+            createMeal(
+                id = 2, minutes = null,
+                nutrition = createNutrition(totalFat = 20.0, saturatedFat = 20.0, carbohydrates = 20.0)
+            )
+        )
+        //when
+        val result = healthyMealsUseCase.getHealthyQuickMealsBelowAverage()
+        //Then
+        assertThat(result).isEmpty()
+    }
+
+
+    @Test
+    fun `getHealthyQuickMealsBelowAverage should return empty list when meals take null nutrition`() {
+        //Given
+        every { repository.getAllMeals() } returns listOf(
+            createMeal(
+                id = 1, minutes = 15,
                 nutrition = null
-            )
-        )
-        //when
-        val result = healthyMealsUseCase.getHealthyQuickMealsBelowAverage()
-        //Then
-        assertThat(result).isEmpty()
-    }
-
-    @Test
-    fun `getHealthyQuickMealsBelowAverage should return empty list when meals take zero min and nutrition null`(){
-        //Given
-        every { repository.getAllMeals() } returns listOf(
+            ),
             createMeal(
-                id = 1,
-                name = "pasta",
-                minutes = OVER_MINUTE,
+                id = 2, minutes = 1,
                 nutrition = null
+            ),
+            createMeal(
+                id = 3, minutes = 14,
+                nutrition = createNutrition(totalFat = 80.0, saturatedFat = 80.0, carbohydrates = 80.0)
+            ),
+            createMeal(
+                id = 4, minutes = 5,
+                nutrition = createNutrition(totalFat = 20.0, saturatedFat = 20.0, carbohydrates = 20.0)
             )
         )
         //when
         val result = healthyMealsUseCase.getHealthyQuickMealsBelowAverage()
+        val resultIds = result.map { it.id }
         //Then
-        assertThat(result).isEmpty()
+        assertThat(resultIds).isEqualTo(listOf(4))
     }
 
     @Test
-    fun `getHealthyQuickMealsBelowAverage should return empty list when meals take null min and nutrition null`(){
+    fun `getHealthyQuickMealsBelowAverage should return meals with less than average total fat when get meals with multiple nutritions`() {
         //Given
         every { repository.getAllMeals() } returns listOf(
             createMeal(
-                id = 1,
-                name = "pasta",
-                minutes = null,
-                nutrition = null
+                id = 1, nutrition = createNutrition(totalFat = 100.0, saturatedFat = 100.0, carbohydrates = 100.0)
+            ),
+            createMeal(
+                id = 2, nutrition = createNutrition(totalFat = 100.0, saturatedFat = 20.0, carbohydrates = 20.0)
+            ),
+            createMeal(
+                id = 3, nutrition = createNutrition(totalFat = 120.0, saturatedFat = 20.0, carbohydrates = 20.0)
+            ),
+            createMeal(
+                id = 4, nutrition = createNutrition(totalFat = 20.0, saturatedFat = 20.0, carbohydrates = 20.0)
+            ),
+            createMeal(
+                id = 5, nutrition = createNutrition(totalFat = 10.0, saturatedFat = 20.0, carbohydrates = 20.0)
+            ),
+            createMeal(
+                id = 6, nutrition = createNutrition(totalFat = null, saturatedFat = 20.0, carbohydrates = 20.0)
             )
         )
         //when
         val result = healthyMealsUseCase.getHealthyQuickMealsBelowAverage()
+        val resultIds = result.map { it.id }
         //Then
-        assertThat(result).isEmpty()
+        assertThat(resultIds).isEqualTo(listOf(4, 5))
     }
 
-
-
     @Test
-    fun `getHealthyQuickMealsBelowAverage should return empty list when meals take equal 15 null min and nutrition null`(){
+    fun `getHealthyQuickMealsBelowAverage should return meals with less than average saturated fat when get meals with multiple nutritions`() {
         //Given
         every { repository.getAllMeals() } returns listOf(
             createMeal(
-                id = 1,
-                name = "pasta",
-                minutes = MINUTE,
-                nutrition = null
+                id = 1, nutrition = createNutrition(totalFat = 100.0, saturatedFat = 100.0, carbohydrates = 100.0)
+            ),
+            createMeal(
+                id = 2, nutrition = createNutrition(totalFat = 20.0, saturatedFat = 100.0, carbohydrates = 20.0)
+            ),
+            createMeal(
+                id = 3, nutrition = createNutrition(totalFat = 20.0, saturatedFat = 120.0, carbohydrates = 20.0)
+            ),
+            createMeal(
+                id = 4, nutrition = createNutrition(totalFat = 20.0, saturatedFat = 20.0, carbohydrates = 20.0)
+            ),
+            createMeal(
+                id = 5, nutrition = createNutrition(totalFat = 20.0, saturatedFat = 10.0, carbohydrates = 20.0)
+            ),
+            createMeal(
+                id = 6, nutrition = createNutrition(totalFat = 20.0, saturatedFat = null, carbohydrates = 20.0)
             )
         )
         //when
         val result = healthyMealsUseCase.getHealthyQuickMealsBelowAverage()
+        val resultIds = result.map { it.id }
         //Then
-        assertThat(result).isEmpty()
+        assertThat(resultIds).isEqualTo(listOf(4, 5))
     }
 
+
     @Test
-    fun `getHealthyQuickMealsBelowAverage should return empty list when meals take less 15 null min and nutrition null`(){
+    fun `getHealthyQuickMealsBelowAverage should return meals with less than average carbohydrates when get meals with multiple nutritions`() {
         //Given
         every { repository.getAllMeals() } returns listOf(
             createMeal(
-                id = 1,
-                name = "pasta",
-                minutes = MINUTE_LESS,
-                nutrition = null
-            )
-        )
-        //when
-        val result = healthyMealsUseCase.getHealthyQuickMealsBelowAverage()
-        //Then
-        assertThat(result).isEmpty()
-    }
-
-    @Test
-    fun `getHealthyQuickMealsBelowAverage should return empty list when meals take less 15 min and nutrition not null but totalFat over`(){
-        //Given
-        every { repository.getAllMeals() } returns listOf(
+                id = 1, nutrition = createNutrition(totalFat = 100.0, saturatedFat = 100.0, carbohydrates = 100.0)
+            ),
             createMeal(
-                id = 1,
-                name = "pasta",
-                minutes = MINUTE_LESS,
-                nutrition = createNutrition(
-                    totalFat = 80.0,
-                    carbohydrates = null,
-                    saturatedFat = null
-
-                )
-            )
-        )
-        //when
-        val result = healthyMealsUseCase.getHealthyQuickMealsBelowAverage()
-        //Then
-        assertThat(result).isEmpty()
-    }
-
-
-    @Test
-    fun `getHealthyQuickMealsBelowAverage should return empty list when meals take less 15 min and nutrition not null but carbohydrates over`(){
-        //Given
-        every { repository.getAllMeals() } returns listOf(
+                id = 2, nutrition = createNutrition(totalFat = 20.0, saturatedFat = 20.0, carbohydrates = 100.0)
+            ),
             createMeal(
-                id = 1,
-                name = "pasta",
-                minutes = MINUTE_LESS,
-                nutrition = createNutrition(
-                    totalFat = null,
-                    carbohydrates = 80.0,
-                    saturatedFat = null
-
-                )
+                id = 3, nutrition = createNutrition(totalFat = 20.0, saturatedFat = 20.0, carbohydrates = 120.0)
+            ),
+            createMeal(
+                id = 4, nutrition = createNutrition(totalFat = 20.0, saturatedFat = 20.0, carbohydrates = 20.0)
+            ),
+            createMeal(
+                id = 5, nutrition = createNutrition(totalFat = 20.0, saturatedFat = 10.0, carbohydrates = 20.0)
+            ),
+            createMeal(
+                id = 6, nutrition = createNutrition(totalFat = 20.0, saturatedFat = null, carbohydrates = 20.0)
             )
         )
         //when
         val result = healthyMealsUseCase.getHealthyQuickMealsBelowAverage()
+        val resultIds = result.map { it.id }
         //Then
-        assertThat(result).isEmpty()
-    }
-
-
-    @Test
-    fun `getHealthyQuickMealsBelowAverage should return meal when all nutrition values are below average`() {
-        //Given
-        val mealHigh = createMeal(
-            id = 1,
-            name = "fatty",
-            minutes = 10,
-            nutrition = createNutrition(
-                totalFat = 80.0,
-                saturatedFat = 80.0,
-                carbohydrates = 80.0
-            )
-        )
-
-        val mealLow = createMeal(
-            id = 2,
-            name = "healthy",
-            minutes = 10,
-            nutrition = createNutrition(
-                totalFat = 20.0,
-                saturatedFat = 20.0,
-                carbohydrates = 20.0
-            )
-        )
-        every { repository.getAllMeals() } returns listOf(mealHigh, mealLow)
-
-        //When
-        val result = healthyMealsUseCase.getHealthyQuickMealsBelowAverage()
-
-        //Then
-        assertThat(result).containsExactly(mealLow)
-    }
-
-
-
-    @Test
-    fun `getHealthyQuickMealsBelowAverage should return meal when only totalFat is below average`() {
-        val mealHigh = createMeal(
-            id = 1,
-            name = "fatty",
-            minutes = 10,
-            nutrition = createNutrition(
-                totalFat = 80.0,
-                carbohydrates = null,
-                saturatedFat = null
-            )
-        )
-
-        val mealLow = createMeal(
-            id = 2,
-            name = "light meal",
-            minutes = 10,
-            nutrition = createNutrition(
-                totalFat = 20.0,
-                carbohydrates = null,
-                saturatedFat = null
-            )
-        )
-
-        every { repository.getAllMeals() } returns listOf(mealHigh, mealLow)
-
-        val result = healthyMealsUseCase.getHealthyQuickMealsBelowAverage()
-        assertThat(result).containsExactly(mealLow)
-    }
-
-    @Test
-    fun `getHealthyQuickMealsBelowAverage should return meal when only carbohydrates is below average`() {
-        val mealHigh = createMeal(
-            id = 1,
-            name = "carby",
-            minutes = 10,
-            nutrition = createNutrition(
-                carbohydrates = 100.0,
-                saturatedFat = null,
-                totalFat = null,
-
-
-                )
-        )
-
-        val mealLow = createMeal(
-            id = 2,
-            name = "low carb",
-            minutes = 10,
-            nutrition = createNutrition(
-                carbohydrates = 30.0,
-                saturatedFat = null,
-                totalFat = null,
-
-                )
-        )
-
-        every { repository.getAllMeals() } returns listOf(mealHigh, mealLow)
-
-        val result = healthyMealsUseCase.getHealthyQuickMealsBelowAverage()
-        assertThat(result).containsExactly(mealLow)
-    }
-
-
-
-
-    companion object {
-        private const val MINUTE = 15
-        private const val MINUTE_LESS = 10
-        private const val OVER_MINUTE = 30
+        assertThat(resultIds).isEqualTo(listOf(4, 5))
     }
 }

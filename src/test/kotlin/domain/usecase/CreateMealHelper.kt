@@ -21,6 +21,7 @@ fun createMeal(
     ingredients = null,
     contributorId = null
 )
+
 fun createNutrition(
     carbohydrates: Double,
     protein: Double
@@ -33,6 +34,7 @@ fun createNutrition(
     totalFat = null,
     saturatedFat = null
 )
+
 fun createMeal(
     id: Int,
     name: String,
@@ -53,6 +55,7 @@ fun createMeal(
     ingredients = null,
     contributorId = null
 )
+
 fun createMeal(
     id: Int,
     name: String,
@@ -72,6 +75,7 @@ fun createMeal(
     ingredients = null,
     contributorId = null,
 )
+
 fun createMeal(
     id: Int,
     name: String,
@@ -90,6 +94,7 @@ fun createMeal(
     ingredients = ingredients,
     contributorId = null
 )
+
 fun createMeal(
     id: Int,
     name: String
@@ -130,8 +135,8 @@ fun createMeal(
 
 fun createMeal(
     id: Int,
-    name: String,
-    minutes: Int?,
+    name: String = "name",
+    minutes: Int? = 15,
     nutrition: Nutrition?
 ) = Meal(
     id = id,
