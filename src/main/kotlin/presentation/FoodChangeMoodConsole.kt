@@ -2,11 +2,11 @@ package presentation
 
 import org.example.presentation.choices.IChoicesManager
 import org.example.presentation.console_io.IMessagePrinter
-import org.example.presentation.console_io.ReadManager
+import org.example.presentation.console_io.IReadManager
 
 class FoodChangeMoodConsole(private val iChoicesManager: IChoicesManager,
                             private val iMessagePrinter: IMessagePrinter,
-                            private val iReadManager: ReadManager){
+                            private val iReadManager: IReadManager){
 
     fun start() {
         iMessagePrinter.greet()
