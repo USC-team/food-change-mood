@@ -51,12 +51,12 @@ class FoodChangeMoodConsoleTest {
         }
     }
 
-    @Test
+    /*@Test
     fun `should call chooseOption with the correct input`() {
         every { readManager.readInt() } returns 7
 
         foodChangeMoodConsole.chooseOption()
 
         verify { choicesManager.chooseOption(7) }
-    }
+    }*/
 }

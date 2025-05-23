@@ -163,6 +163,18 @@ class ChoicesManagerTest {
     }
 
     @Test
+    fun `should keep suggesting keto meals when user didn't like the first one`() {
+        val meal = createMeal(id = 5, name = "Keto Salad", minutes = 10, nIngredients = 5, nSteps = 2)
+        every { getKetoMealUseCase.getKetoMeal() } returns meal
+        every { readManager.readLine() } returnsMany listOf("n", "y")
+        val choice=7
+        consoleChoicesManager.chooseOption(choice)
+
+        verify(exactly = 2) { messagePrinter.printMealName(meal) }
+        verify(exactly = 2) { messagePrinter.askUserIfLikedMeal() }
+        verify { messagePrinter.showMealsDetails(meal) }
+    }
+    @Test
     fun `should keep suggesting keto meals until user likes it`() {
         val meal = createMeal(id = 5, name = "Keto Salad", minutes = 10, nIngredients = 5, nSteps = 2)
         every { getKetoMealUseCase.getKetoMeal() } returns meal
@@ -177,15 +189,15 @@ class ChoicesManagerTest {
 
     @Test
     fun `should show keto meal name when choosing it from list`() {
+        //Given
         val meal = createMeal(id = 6, name = "Keto Bowl", minutes = 8, nIngredients = 4, nSteps = 1)
         every { getKetoMealUseCase.getKetoMeal() } returns meal
         every { readManager.readLine() } returns "Y"
         val choice=7
+        //When
         consoleChoicesManager.chooseOption(choice)
-
+        //Then
         verify { messagePrinter.printMealName(meal) }
-        //verify { messagePrinter.askUserIfLikedMeal() }
-        //verify { messagePrinter.showMealsDetails(meal) }
     }
     @Test
     fun `should ask user if he liked a meal to show its details when in keto meal`() {
