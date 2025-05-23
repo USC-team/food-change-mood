@@ -9,8 +9,14 @@ import domain.usecase.GetGuessGameUseCase
 import domain.usecase.GetKetoMealUseCase
 import domain.usecase.GetSweetsWithNoEggsUseCase
 import data.repository.MealsRepositoryImplementation
-import org.koin.dsl.module
+import org.example.presentation.choices.ChoicesManager
+import org.example.presentation.choices.IChoicesManager
+import org.example.presentation.console_io.IMessagePrinter
+import org.example.presentation.console_io.IReadManager
+import org.example.presentation.console_io.MessagesPrinter
+import org.example.presentation.console_io.ReadManager
 import presentation.FoodChangeMoodConsole
+import org.koin.dsl.module
 import java.io.File
 
 val appModule = module {
@@ -28,5 +34,8 @@ val appModule = module {
     single { GetSweetsWithNoEggsUseCase(get()) }
     single { GetEasyPreparedMealsUseCase(get()) }
     single { GetKetoMealUseCase(get()) }
-    single { FoodChangeMoodConsole(get(), get(), get(), get()) }
+    single<IReadManager> { ReadManager }
+    single<IMessagePrinter>{ MessagesPrinter }
+    single<IChoicesManager> { ChoicesManager(get(), get(), get(), get(), get(), get()) }
+    single { FoodChangeMoodConsole(get(), get(), get()) }
 }
