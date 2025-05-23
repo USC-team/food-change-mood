@@ -6,13 +6,15 @@ import domain.repository.MealsRepository
 import domain.usecase.GetEasyPreparedMealsUseCase
 import domain.usecase.GetGuessGameUseCase
 import domain.usecase.GetKetoMealUseCase
-import data.repository.MockDataMealRepository
-import domain.repository.MealsRepository
-import domain.usecase.GetGuessGameUseCase
 import domain.usecase.GetSweetsWithNoEggsUseCase
+import org.example.presentation.choices.ChoicesManager
+import org.example.presentation.choices.IChoicesManager
+import org.example.presentation.console_io.IMessagePrinter
+import org.example.presentation.console_io.IReadManager
+import org.example.presentation.console_io.MessagesPrinter
+import org.example.presentation.console_io.ReadManager
 import presentation.FoodChangeMoodConsole
 import org.koin.dsl.module
-import presentation.FoodChangeMoodConsole
 import java.io.File
 
 val appModule = module {
@@ -22,5 +24,8 @@ val appModule = module {
     single { GetSweetsWithNoEggsUseCase(get()) }
     single { GetEasyPreparedMealsUseCase(get()) }
     single { GetKetoMealUseCase(get()) }
-    single { FoodChangeMoodConsole(get(), get(), get(), get()) }
+    single<IReadManager> { ReadManager }
+    single<IMessagePrinter>{ MessagesPrinter }
+    single<IChoicesManager> { ChoicesManager(get(), get(), get(), get(), get(), get()) }
+    single { FoodChangeMoodConsole(get(), get(), get()) }
 }
