@@ -2,7 +2,6 @@ package data.repository
 
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
-import org.koin.core.context.GlobalContext.getOrNull
 
 class CsvParsersTest {
 
@@ -53,13 +52,16 @@ class CsvParsersTest {
 
     @Test
     fun `parseToMeal with comma-separated and bracketed tokens`() {
+        // Given
         val row = baseRow().apply {
             this[CsvParsers.TAGS]        = "a,b,c"
             this[CsvParsers.STEPS]       = "['s1','s2','s3']"
             this[CsvParsers.INGREDIENTS] = "x,y"
         }
+        // When
         val meal = CsvParsers.parseToMeal(row)
 
+        // Then
         assertEquals(listOf("a","b","c"),       meal.tags)
         assertEquals(listOf("s1","s2","s3"),   meal.steps)
         assertEquals(listOf("x","y"),          meal.ingredients)
