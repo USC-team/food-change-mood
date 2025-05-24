@@ -1,8 +1,8 @@
 package presentation
 
-import org.example.presentation.choices.ChoicesManager
-import org.example.presentation.console_io.MessagePrinter
-import org.example.presentation.console_io.ReadManager
+import presentation.choices.ChoicesManager
+import presentation.console_io.MessagePrinter
+import presentation.console_io.ReadManager
 
 class FoodChangeMoodConsole(private val choicesManager: ChoicesManager,
                             private val messagePrinter: MessagePrinter,
