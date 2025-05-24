@@ -37,6 +37,7 @@ val includedPackages = listOf(
 val excludedPackages = listOf(
     "**/dependencyInjection/**",
     "**/domain/model/**",
+    "**/presentation/console_io/**"
 )
 
 tasks.jacocoTestReport {
